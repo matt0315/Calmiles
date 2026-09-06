@@ -29,6 +29,7 @@
 		6ECC3E27E6E528F96EDF9303 /* AppIcon-mono.png in Resources */ = {isa = PBXBuildFile; fileRef = D72C00D967F0489B79C21CDA /* AppIcon-mono.png */; };
 		7AE597B69D5112BE33908E47 /* TripsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80669D832A1DB7277136166B /* TripsListView.swift */; };
 		7FF1FB080AEC00A794F2179A /* AppIcon-light.png in Resources */ = {isa = PBXBuildFile; fileRef = D9AFF1FC3BB375B4567879BB /* AppIcon-light.png */; };
+		8333491451D9C6D55C74A09B /* AppPreviewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316D8D3C474C5861BB8C5CCA /* AppPreviewUITests.swift */; };
 		8459C0F619D3F65E7C46A475 /* TripDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065A2BDE004E978117FC2BB1 /* TripDetailView.swift */; };
 		89F31A41B5083C0CBB153104 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ADD667F58E89FAA1C8CB95E /* HomeView.swift */; };
 		8B3E8703515F2748E99894EF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B31C4D98577AE42DBFBAA1DE /* Assets.xcassets */; };
@@ -104,6 +105,7 @@
 		1ADD667F58E89FAA1C8CB95E /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		201543456647E1EE92EE9D17 /* AnalyticsStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsStub.swift; sourceTree = "<group>"; };
 		29272AA35ABEDCF24DCD4744 /* Calmiles.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Calmiles.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		316D8D3C474C5861BB8C5CCA /* AppPreviewUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPreviewUITests.swift; sourceTree = "<group>"; };
 		31A44A63508F6CC4EC5C7108 /* TripDetectionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripDetectionService.swift; sourceTree = "<group>"; };
 		3205F825963B8B6A45117201 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		32A34CACC0C8E47FA0E26E83 /* SettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStore.swift; sourceTree = "<group>"; };
@@ -223,6 +225,7 @@
 		3244AB832F7B10FE74F58C68 /* CalmilesUITests */ = {
 			isa = PBXGroup;
 			children = (
+				316D8D3C474C5861BB8C5CCA /* AppPreviewUITests.swift */,
 				45DBBECD2EF28FF454B1DDFA /* CalmilesUITests.swift */,
 				959206240145F3B875F64907 /* ScreenshotUITests.swift */,
 			);
@@ -631,6 +634,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8333491451D9C6D55C74A09B /* AppPreviewUITests.swift in Sources */,
 				959446C69D2E361369F5524F /* CalmilesUITests.swift in Sources */,
 				6582E3CCB095A64B6395DFEE /* ScreenshotUITests.swift in Sources */,
 			);

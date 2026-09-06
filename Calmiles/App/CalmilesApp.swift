@@ -15,9 +15,13 @@ struct CalmilesApp: App {
     private let container = CalmilesModelContainer.make()
 
     /// Cold-start branded splash; skipped for UI tests.
+    /// `-UITestAppPreview` keeps splash so App Preview recordings include branded launch.
     private static var shouldShowSplashOnLaunch: Bool {
         #if DEBUG
         let args = ProcessInfo.processInfo.arguments
+        if args.contains("-UITestAppPreview") {
+            return true
+        }
         if args.contains("-UITesting")
             || args.contains("-UITestSkipOnboarding")
             || args.contains("-UITestReset") {
@@ -30,10 +34,10 @@ struct CalmilesApp: App {
     init() {
         #if DEBUG
         let args = ProcessInfo.processInfo.arguments
-        if args.contains("-UITestReset") || args.contains("-UITestSkipOnboarding") {
-            // Ensure predictable UITest / screenshot state
+        if args.contains("-UITestReset") || args.contains("-UITestSkipOnboarding") || args.contains("-UITestAppPreview") {
+            // Ensure predictable UITest / screenshot / app-preview state
             var s = AppSettings.default
-            if args.contains("-UITestSkipOnboarding") {
+            if args.contains("-UITestSkipOnboarding") || args.contains("-UITestAppPreview") {
                 s.hasCompletedOnboarding = true
                 s.country = .au
                 s.distanceUnit = .kilometers
