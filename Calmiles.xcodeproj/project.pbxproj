@@ -24,7 +24,9 @@
 		599AE2AE8B68366D86FC6DA7 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3205F825963B8B6A45117201 /* SettingsView.swift */; };
 		5AA3D3663F3A96E2E3915E0B /* SubscriptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0F3671CE1382AEEA56657E /* SubscriptionManager.swift */; };
 		6D2AFB7F8DDD423152E65FE9 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E2229E8124D9187689C639 /* Components.swift */; };
+		6ECC3E27E6E528F96EDF9303 /* AppIcon-mono.png in Resources */ = {isa = PBXBuildFile; fileRef = D72C00D967F0489B79C21CDA /* AppIcon-mono.png */; };
 		7AE597B69D5112BE33908E47 /* TripsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80669D832A1DB7277136166B /* TripsListView.swift */; };
+		7FF1FB080AEC00A794F2179A /* AppIcon-light.png in Resources */ = {isa = PBXBuildFile; fileRef = D9AFF1FC3BB375B4567879BB /* AppIcon-light.png */; };
 		8459C0F619D3F65E7C46A475 /* TripDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065A2BDE004E978117FC2BB1 /* TripDetailView.swift */; };
 		89F31A41B5083C0CBB153104 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ADD667F58E89FAA1C8CB95E /* HomeView.swift */; };
 		8B3E8703515F2748E99894EF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B31C4D98577AE42DBFBAA1DE /* Assets.xcassets */; };
@@ -130,7 +132,9 @@
 		CCC21CE34F45AF477D796FFF /* DistanceCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceCalculator.swift; sourceTree = "<group>"; };
 		CDFC6B5A3C61FFD2CDAE3505 /* RatePreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatePreset.swift; sourceTree = "<group>"; };
 		D6D75183B242C8792C69E640 /* CalmilesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalmilesApp.swift; sourceTree = "<group>"; };
+		D72C00D967F0489B79C21CDA /* AppIcon-mono.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AppIcon-mono.png"; sourceTree = "<group>"; };
 		D81868DE23747E3881698967 /* CalmilesTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CalmilesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9AFF1FC3BB375B4567879BB /* AppIcon-light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AppIcon-light.png"; sourceTree = "<group>"; };
 		DDB57707987C5976F7D7473D /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		E12F0409F1086C2CFB40880C /* RateEstimatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateEstimatorTests.swift; sourceTree = "<group>"; };
 		E4AEB55B88896BB1AB567722 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -157,11 +161,20 @@
 				4CF4C8A074ABD74DCB4BACB6 /* Domain */,
 				1A4223D1B1CE5E9B53BF0964 /* Features */,
 				B80091411EABE6D1A95608E6 /* Preview Content */,
+				14B09CD6A4F8E1FBE9EC4980 /* Resources */,
 				4DB02E5015FA3BFC4B46265E /* Assets.xcassets */,
 				61F2AF10619CDEAB586D496B /* Calmiles.entitlements */,
 				7DB3CA15F99BDBFE45B98695 /* Info.plist */,
 			);
 			path = Calmiles;
+			sourceTree = "<group>";
+		};
+		14B09CD6A4F8E1FBE9EC4980 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				24F2AE1A048C1EB6342EF535 /* IconVariants */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		1A4223D1B1CE5E9B53BF0964 /* Features */ = {
@@ -175,6 +188,15 @@
 				45823BDD3EA75D804165228D /* Trips */,
 			);
 			path = Features;
+			sourceTree = "<group>";
+		};
+		24F2AE1A048C1EB6342EF535 /* IconVariants */ = {
+			isa = PBXGroup;
+			children = (
+				D9AFF1FC3BB375B4567879BB /* AppIcon-light.png */,
+				D72C00D967F0489B79C21CDA /* AppIcon-mono.png */,
+			);
+			path = IconVariants;
 			sourceTree = "<group>";
 		};
 		312C7D7362FEBC517A868418 /* CalmilesWidget */ = {
@@ -473,20 +495,20 @@
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					4A20E5C4D7FC33C3E635EE83 = {
-						DevelopmentTeam = "";
+						DevelopmentTeam = 8KV5SRG3UC;
 						ProvisioningStyle = Automatic;
 					};
 					8A147911D69B4439EBACA9C4 = {
-						DevelopmentTeam = "";
+						DevelopmentTeam = 8KV5SRG3UC;
 						ProvisioningStyle = Automatic;
 						TestTargetID = C9AA6A533F452F9F9584C01C;
 					};
 					C9AA6A533F452F9F9584C01C = {
-						DevelopmentTeam = "";
+						DevelopmentTeam = 8KV5SRG3UC;
 						ProvisioningStyle = Automatic;
 					};
 					FC10297D23EA8D2BE8AEFA79 = {
-						DevelopmentTeam = "";
+						DevelopmentTeam = 8KV5SRG3UC;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -526,6 +548,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7FF1FB080AEC00A794F2179A /* AppIcon-light.png in Resources */,
+				6ECC3E27E6E528F96EDF9303 /* AppIcon-mono.png in Resources */,
 				355DD4CD839B28A20474394B /* Assets.xcassets in Resources */,
 				3A2FE54D7E7BF302E64DB8D4 /* Preview Assets.xcassets in Resources */,
 			);
@@ -671,7 +695,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 8KV5SRG3UC;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -845,7 +869,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 8KV5SRG3UC;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
