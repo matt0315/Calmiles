@@ -9,6 +9,28 @@ struct CalmilesApp: App {
 
     private let container = CalmilesModelContainer.make()
 
+    init() {
+        #if DEBUG
+        let args = ProcessInfo.processInfo.arguments
+        if args.contains("-UITestReset") || args.contains("-UITestSkipOnboarding") {
+            // Ensure predictable UITest / screenshot state
+            var s = AppSettings.default
+            if args.contains("-UITestSkipOnboarding") {
+                s.hasCompletedOnboarding = true
+                s.country = .au
+                s.distanceUnit = .kilometers
+                s.selectedRatePresetID = RateTable.activePreset(for: .au)?.id
+                s.autoDetectEnabled = false
+            }
+            if let data = try? JSONEncoder().encode(s) {
+                UserDefaults.standard.set(data, forKey: "calmiles.appSettings")
+            }
+            // Reset shared singleton after writing defaults
+            // SettingsStore.shared already may have loaded; force via Notification in DEBUG path below
+        }
+        #endif
+    }
+
     var body: some Scene {
         WindowGroup {
             Group {

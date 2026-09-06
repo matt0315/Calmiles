@@ -23,6 +23,7 @@
 		54DF0358A2563786E6FD4C67 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CA27B568012A6820419FA4 /* PaywallView.swift */; };
 		599AE2AE8B68366D86FC6DA7 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3205F825963B8B6A45117201 /* SettingsView.swift */; };
 		5AA3D3663F3A96E2E3915E0B /* SubscriptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0F3671CE1382AEEA56657E /* SubscriptionManager.swift */; };
+		6582E3CCB095A64B6395DFEE /* ScreenshotUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959206240145F3B875F64907 /* ScreenshotUITests.swift */; };
 		6D2AFB7F8DDD423152E65FE9 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E2229E8124D9187689C639 /* Components.swift */; };
 		6ECC3E27E6E528F96EDF9303 /* AppIcon-mono.png in Resources */ = {isa = PBXBuildFile; fileRef = D72C00D967F0489B79C21CDA /* AppIcon-mono.png */; };
 		7AE597B69D5112BE33908E47 /* TripsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80669D832A1DB7277136166B /* TripsListView.swift */; };
@@ -121,6 +122,7 @@
 		83CA27B568012A6820419FA4 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
 		8566992ADB6BF8CF91A91925 /* CoordinatePoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatePoint.swift; sourceTree = "<group>"; };
 		867A60903C3B197C78D7B354 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		959206240145F3B875F64907 /* ScreenshotUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotUITests.swift; sourceTree = "<group>"; };
 		A43E45155E25C58E82C13DB8 /* CalmilesUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CalmilesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B04F24B5742D7F3F39F0CC5F /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
 		B31C4D98577AE42DBFBAA1DE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -215,6 +217,7 @@
 			isa = PBXGroup;
 			children = (
 				45DBBECD2EF28FF454B1DDFA /* CalmilesUITests.swift */,
+				959206240145F3B875F64907 /* ScreenshotUITests.swift */,
 			);
 			path = CalmilesUITests;
 			sourceTree = "<group>";
@@ -528,9 +531,9 @@
 			projectRoot = "";
 			targets = (
 				C9AA6A533F452F9F9584C01C /* Calmiles */,
+				FC10297D23EA8D2BE8AEFA79 /* CalmilesWidgetExtension */,
 				4A20E5C4D7FC33C3E635EE83 /* CalmilesTests */,
 				8A147911D69B4439EBACA9C4 /* CalmilesUITests */,
-				FC10297D23EA8D2BE8AEFA79 /* CalmilesWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -601,6 +604,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				959446C69D2E361369F5524F /* CalmilesUITests.swift in Sources */,
+				6582E3CCB095A64B6395DFEE /* ScreenshotUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -648,6 +652,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = CalmilesWidget/CalmilesWidget.entitlements;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = CalmilesWidget/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
@@ -763,6 +768,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = CalmilesWidget/CalmilesWidget.entitlements;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = CalmilesWidget/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
@@ -778,6 +784,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Calmiles/Calmiles.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -816,6 +823,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Calmiles/Calmiles.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;

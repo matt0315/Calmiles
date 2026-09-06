@@ -75,8 +75,8 @@ struct SettingsView: View {
 
                 Section("Support & legal") {
                     Link("Email support", destination: URL(string: "mailto:support@botland.studio")!)
-                    Link("Privacy Policy (placeholder)", destination: URL(string: "https://botland.studio/calmiles/privacy")!)
-                    Link("Terms of Use (placeholder)", destination: URL(string: "https://botland.studio/calmiles/terms")!)
+                    Link("Privacy Policy", destination: URL(string: "https://botland.studio/privacy")!)
+                    Link("Terms of Use", destination: URL(string: "https://botland.studio/terms")!)
                 }
 
                 Section("Data") {

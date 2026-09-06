@@ -29,6 +29,7 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: studio.botland.calmiles
+        CODE_SIGN_ENTITLEMENTS: Calmiles/Calmiles.entitlements
         INFOPLIST_FILE: Calmiles/Info.plist
         GENERATE_INFOPLIST_FILE: false
         TARGETED_DEVICE_FAMILY: "1,2"
@@ -52,6 +53,7 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: studio.botland.calmiles.widget
+        CODE_SIGN_ENTITLEMENTS: CalmilesWidget/CalmilesWidget.entitlements
         INFOPLIST_FILE: CalmilesWidget/Info.plist
         GENERATE_INFOPLIST_FILE: false
         SKIP_INSTALL: YES
@@ -95,8 +97,10 @@ schemes:
         CalmilesUITests: [test]
     run:
       config: Debug
+      storeKitConfiguration: Configuration/Calmiles.storekit
     test:
       config: Debug
+      storeKitConfiguration: Configuration/Calmiles.storekit
       targets:
         - CalmilesTests
         - CalmilesUITests

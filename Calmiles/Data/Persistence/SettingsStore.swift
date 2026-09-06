@@ -13,6 +13,28 @@ final class SettingsStore: ObservableObject {
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
+        #if DEBUG
+        let args = ProcessInfo.processInfo.arguments
+        if args.contains("-UITestReset") {
+            defaults.removeObject(forKey: key)
+            self.settings = .default
+            self.settings.rolloverFreeTierIfNeeded()
+            return
+        }
+        if args.contains("-UITestSkipOnboarding") {
+            var s = AppSettings.default
+            s.hasCompletedOnboarding = true
+            s.country = .au
+            s.distanceUnit = .kilometers
+            s.selectedRatePresetID = RateTable.activePreset(for: .au)?.id
+            s.autoDetectEnabled = false
+            self.settings = s
+            if let data = try? JSONEncoder().encode(s) {
+                defaults.set(data, forKey: key)
+            }
+            return
+        }
+        #endif
         if let data = defaults.data(forKey: key),
            let decoded = try? JSONDecoder().decode(AppSettings.self, from: data) {
             self.settings = decoded

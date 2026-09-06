@@ -75,7 +75,21 @@ struct PaywallView: View {
                 }
             }
             .task {
+                #if DEBUG
+                if ProcessInfo.processInfo.arguments.contains("-UITesting") {
+                    // Avoid hanging Product.products without StoreKit config during screenshot runs
+                    await withTaskGroup(of: Void.self) { group in
+                        group.addTask { await subscriptions.loadProducts() }
+                        group.addTask { try? await Task.sleep(nanoseconds: 1_500_000_000) }
+                        await group.next()
+                        group.cancelAll()
+                    }
+                } else {
+                    await subscriptions.loadProducts()
+                }
+                #else
                 await subscriptions.loadProducts()
+                #endif
                 await subscriptions.refreshEntitlements()
                 if subscriptions.isPro { dismiss() }
             }

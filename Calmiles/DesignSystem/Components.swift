@@ -121,24 +121,28 @@ struct ClassificationChip: View {
     var action: (() -> Void)? = nil
 
     var body: some View {
-        Button {
-            action?()
-        } label: {
-            Text(classification.displayName)
-                .font(CalmilesTypography.callout.weight(.semibold))
-                .padding(.horizontal, 14)
-                .padding(.vertical, 8)
-                .background(background)
-                .foregroundStyle(foreground)
-                .clipShape(Capsule())
-                .overlay(
-                    Capsule()
-                        .strokeBorder(border, lineWidth: isSelected ? 2 : 0)
-                )
+        let label = Text(classification.displayName)
+            .font(CalmilesTypography.callout.weight(.semibold))
+            .padding(.horizontal, 14)
+            .padding(.vertical, 8)
+            .background(background)
+            .foregroundStyle(foreground)
+            .clipShape(Capsule())
+            .overlay(
+                Capsule()
+                    .strokeBorder(border, lineWidth: isSelected ? 2 : 0)
+            )
+        Group {
+            if let action {
+                Button(action: action) { label }
+                    .buttonStyle(.plain)
+                    .accessibilityAddTraits(isSelected ? [.isSelected, .isButton] : .isButton)
+            } else {
+                label
+                    .accessibilityAddTraits(isSelected ? .isSelected : [])
+            }
         }
-        .buttonStyle(.plain)
         .accessibilityLabel("\(classification.displayName)\(isSelected ? ", selected" : "")")
-        .accessibilityAddTraits(isSelected ? [.isSelected, .isButton] : .isButton)
     }
 
     private var background: Color {

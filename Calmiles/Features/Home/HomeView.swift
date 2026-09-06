@@ -35,6 +35,11 @@ struct HomeView: View {
             }
             .onAppear {
                 AnalyticsStub.screen("home")
+                #if DEBUG
+                if ProcessInfo.processInfo.arguments.contains("-UITestSeedTrips") {
+                    seedUITestTripsIfNeeded()
+                }
+                #endif
                 refreshSummary()
             }
             .onChange(of: trips.count) { _, _ in refreshSummary() }
@@ -161,6 +166,46 @@ struct HomeView: View {
             CrashProtocolStub.record(error)
         }
     }
+
+    #if DEBUG
+    private func seedUITestTripsIfNeeded() {
+        let key = "calmiles.uitest.seeded"
+        guard !UserDefaults.standard.bool(forKey: key) else { return }
+        let repo = TripRepository(context: modelContext)
+        let now = Date()
+        let samples: [(TimeInterval, TripClassification, String)] = [
+            (3600, .business, "Client visit"),
+            (7200, .undecided, ""),
+            (10800, .personal, "Groceries"),
+        ]
+        for (offset, classification, purpose) in samples {
+            let end = now.addingTimeInterval(-offset)
+            let start = end.addingTimeInterval(-2400)
+            let points: [CoordinatePoint] = [
+                .init(latitude: -31.9505, longitude: 115.8605, timestamp: start),
+                .init(latitude: -31.9550, longitude: 115.8700, timestamp: start.addingTimeInterval(800)),
+                .init(latitude: -31.9600, longitude: 115.8800, timestamp: end),
+            ]
+            let meters = DistanceCalculator.pathLengthMeters(points)
+            let trip = TripEntity(
+                startDate: start,
+                endDate: end,
+                distanceMeters: meters,
+                classification: classification,
+                purpose: purpose,
+                notes: "",
+                isManual: true,
+                isAutoDetected: false,
+                routePoints: points
+            )
+            try? repo.add(trip)
+        }
+        UserDefaults.standard.set(true, forKey: key)
+        refreshSummary()
+        WidgetCenter.shared.reloadAllTimelines()
+    }
+    #endif
+
 }
 
 extension TripEntity: Identifiable {}
