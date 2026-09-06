@@ -1,0 +1,36 @@
+# Xcode
+build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.xccheckout
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+timeline.xctimeline
+playground.xcworkspace
+
+# Swift Package Manager
+.build/
+Packages/
+Package.pins
+Package.resolved
+*.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/
+
+# CocoaPods / Carthage
+Pods/
+Carthage/Build/
+
+# Secrets — never commit
+*.p12
+*.mobileprovision
+AuthKey_*.p8
+.env
+.env.*
+Secrets.xcconfig
+**/GoogleService-Info.plist
+
+# OS
+.DS_Store
