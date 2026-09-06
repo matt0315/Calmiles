@@ -6,8 +6,26 @@ struct CalmilesApp: App {
     @StateObject private var settings = SettingsStore.shared
     @StateObject private var subscriptions = SubscriptionManager.shared
     @StateObject private var tripDetection = TripDetectionService.shared
+    @StateObject private var friendShare = FriendSharePromptStore.shared
+
+    @State private var showSplash: Bool = Self.shouldShowSplashOnLaunch
+    @State private var showSharePrompt = false
+    @State private var showShareSheet = false
 
     private let container = CalmilesModelContainer.make()
+
+    /// Cold-start branded splash; skipped for UI tests.
+    private static var shouldShowSplashOnLaunch: Bool {
+        #if DEBUG
+        let args = ProcessInfo.processInfo.arguments
+        if args.contains("-UITesting")
+            || args.contains("-UITestSkipOnboarding")
+            || args.contains("-UITestReset") {
+            return false
+        }
+        #endif
+        return true
+    }
 
     init() {
         #if DEBUG
@@ -33,24 +51,70 @@ struct CalmilesApp: App {
 
     var body: some Scene {
         WindowGroup {
-            Group {
-                if settings.settings.hasCompletedOnboarding {
-                    RootTabView()
-                } else {
-                    OnboardingView()
+            ZStack {
+                Group {
+                    if settings.settings.hasCompletedOnboarding {
+                        RootTabView()
+                    } else {
+                        OnboardingView()
+                    }
+                }
+                .environmentObject(settings)
+                .environmentObject(subscriptions)
+                .environmentObject(tripDetection)
+                .environmentObject(friendShare)
+                .modelContainer(container)
+                .preferredColorScheme(nil)
+                .task {
+                    await subscriptions.refreshEntitlements()
+                    wireTripDetection()
+                    if settings.settings.hasCompletedOnboarding, settings.settings.autoDetectEnabled {
+                        tripDetection.start()
+                    }
+                    if settings.settings.hasCompletedOnboarding {
+                        friendShare.recordMeaningfulOpenIfNeeded()
+                        // Soft prompt after splash finishes (or immediately if splash skipped)
+                        scheduleSharePromptIfNeeded(delay: showSplash ? 2.0 : 0.8)
+                    }
+                }
+
+                if showSplash {
+                    BotlandStudioSplashView()
+                        .transition(.opacity)
+                        .zIndex(1)
                 }
             }
-            .environmentObject(settings)
-            .environmentObject(subscriptions)
-            .environmentObject(tripDetection)
-            .modelContainer(container)
-            .preferredColorScheme(nil)
-            .task {
-                await subscriptions.refreshEntitlements()
-                wireTripDetection()
-                if settings.settings.hasCompletedOnboarding, settings.settings.autoDetectEnabled {
-                    tripDetection.start()
+            .animation(.easeOut(duration: 0.35), value: showSplash)
+            .task(id: showSplash) {
+                guard showSplash else { return }
+                try? await Task.sleep(nanoseconds: 1_500_000_000) // ~1.5s branded launch
+                withAnimation(.easeOut(duration: 0.35)) {
+                    showSplash = false
                 }
+            }
+            .alert("Enjoying Calmiles?", isPresented: $showSharePrompt) {
+                Button("Share with friends") {
+                    friendShare.markShared()
+                    showShareSheet = true
+                }
+                Button("Not now", role: .cancel) {
+                    friendShare.markDismissed()
+                }
+            } message: {
+                Text("If Calmiles is helping you track mileage, share it with a friend who freelances too.")
+            }
+            .sheet(isPresented: $showShareSheet) {
+                ActivityView(activityItems: [StudioURLs.friendShareText, StudioURLs.website])
+            }
+        }
+    }
+
+    private func scheduleSharePromptIfNeeded(delay: TimeInterval) {
+        guard friendShare.shouldShowSoftPrompt else { return }
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
+            if friendShare.shouldShowSoftPrompt, !showSplash {
+                showSharePrompt = true
             }
         }
     }

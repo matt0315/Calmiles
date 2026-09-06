@@ -1,7 +1,7 @@
 # Calmiles — Release & TestFlight
 
 **Studio:** Botland Studio · **Apple account:** Mathew Smith  
-**Bundle ID:** `studio.botland.calmiles` · **Version:** 1.0.0 (1)
+**Bundle ID:** `studio.botland.calmiles` · **Version:** 1.0.0 (2)
 
 This document covers human-gated signing and App Store Connect steps. No secrets belong in the repo.
 
@@ -34,7 +34,7 @@ This document covers human-gated signing and App Store Connect steps. No secrets
    - SKU: `calmiles-ios`
 2. Age rating / export compliance: encryption uses only standard HTTPS / OS crypto (`ITSAppUsesNonExemptEncryption = false` in Info.plist).
 3. Privacy Nutrition Labels: Location (precise) for app functionality; no tracking for ads.
-4. App Privacy Policy URL: replace placeholder `https://botland.studio/calmiles/privacy` with live page before review.
+4. App Privacy Policy URL: `https://botland.studio/privacy`. Support / marketing: `https://botland.studio`.
 5. Support URL + marketing URL as needed.
 6. Primary category: Finance or Business (confirm ASO choice).
 7. App Review notes: explain background location for automatic trip detection; link to battery disclosure copy; note DEBUG injector is `#if DEBUG` only.

@@ -5,10 +5,12 @@ struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var settings: SettingsStore
     @EnvironmentObject private var subscriptions: SubscriptionManager
+    @EnvironmentObject private var friendShare: FriendSharePromptStore
     @StateObject private var tripDetection = TripDetectionService.shared
 
     @State private var showPaywall = false
     @State private var showDeleteConfirm = false
+    @State private var showShareSheet = false
     @State private var exportMessage: String?
 
     var body: some View {
@@ -73,10 +75,20 @@ struct SettingsView: View {
                     #endif
                 }
 
+                Section("Share") {
+                    Button {
+                        friendShare.markShared()
+                        showShareSheet = true
+                    } label: {
+                        Label("Share Calmiles with friends", systemImage: "square.and.arrow.up")
+                    }
+                }
+
                 Section("Support & legal") {
-                    Link("Email support", destination: URL(string: "mailto:support@botland.studio")!)
-                    Link("Privacy Policy", destination: URL(string: "https://botland.studio/privacy")!)
-                    Link("Terms of Use", destination: URL(string: "https://botland.studio/terms")!)
+                    Link("Website", destination: StudioURLs.website)
+                    Link("Email support", destination: StudioURLs.supportEmail)
+                    Link("Privacy Policy", destination: StudioURLs.privacy)
+                    Link("Terms of Use", destination: StudioURLs.terms)
                 }
 
                 Section("Data") {
@@ -89,7 +101,7 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    LabeledContent("Version", value: "1.0.0 (1)")
+                    LabeledContent("Version", value: versionLabel)
                     LabeledContent("Bundle ID", value: "studio.botland.calmiles")
                 }
 
@@ -99,12 +111,21 @@ struct SettingsView: View {
             }
             .navigationTitle("Settings")
             .sheet(isPresented: $showPaywall) { PaywallView() }
+            .sheet(isPresented: $showShareSheet) {
+                ActivityView(activityItems: [StudioURLs.friendShareText, StudioURLs.website])
+            }
             .confirmationDialog("Delete all trips? This cannot be undone.", isPresented: $showDeleteConfirm, titleVisibility: .visible) {
                 Button("Delete All", role: .destructive) { deleteAll() }
                 Button("Cancel", role: .cancel) {}
             }
             .onAppear { AnalyticsStub.screen("settings") }
         }
+    }
+
+    private var versionLabel: String {
+        let marketing = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
+        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "?"
+        return "\(marketing) (\(build))"
     }
 
     private var countryBinding: Binding<CountryCode> {

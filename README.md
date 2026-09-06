@@ -93,7 +93,9 @@ Honest Info.plist strings disclose background location and battery impact. Analy
 ## Support
 
 - Email: [support@botland.studio](mailto:support@botland.studio)
-- Privacy / Terms: placeholder URLs under `botland.studio/calmiles/` (replace before ASC submit)
+- Website / support: [botland.studio](https://botland.studio)
+- Privacy: [botland.studio/privacy](https://botland.studio/privacy)
+- Terms: [botland.studio/terms](https://botland.studio/terms)
 
 ## License
 
