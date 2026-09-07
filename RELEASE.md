@@ -1,7 +1,7 @@
 # Calmiles — Release & TestFlight
 
 **Studio:** Botland Studio · **Apple account:** Mathew Smith  
-**Bundle ID:** `studio.botland.calmiles` · **Version:** 1.0.0 (2)
+**Bundle ID:** `studio.botland.calmiles` · **Version:** 1.0.0 (3)
 
 This document covers human-gated signing and App Store Connect steps. No secrets belong in the repo.
 

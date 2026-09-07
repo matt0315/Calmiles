@@ -14,7 +14,12 @@ struct TripRowView: View {
                     Text(timeRange)
                         .font(CalmilesTypography.caption)
                         .foregroundStyle(Color.calmilesSecondaryText)
-                    if !trip.purpose.isEmpty {
+                    if let route = trip.routeLabel {
+                        Text(route)
+                            .font(CalmilesTypography.callout)
+                            .foregroundStyle(Color.calmilesSecondaryText)
+                            .lineLimit(2)
+                    } else if !trip.purpose.isEmpty {
                         Text(trip.purpose)
                             .font(CalmilesTypography.callout)
                             .foregroundStyle(Color.calmilesSecondaryText)
@@ -46,6 +51,10 @@ struct TripRowView: View {
     }
 
     private var accessibilityLabel: String {
-        "\(trip.classification.displayName) trip, \(distanceText), \(trip.startDate.formatted())"
+        var parts = ["\(trip.classification.displayName) trip", distanceText, trip.startDate.formatted()]
+        if let route = trip.routeLabel {
+            parts.append(route)
+        }
+        return parts.joined(separator: ", ")
     }
 }

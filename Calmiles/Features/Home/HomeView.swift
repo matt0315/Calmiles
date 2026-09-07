@@ -173,12 +173,12 @@ struct HomeView: View {
         guard !UserDefaults.standard.bool(forKey: key) else { return }
         let repo = TripRepository(context: modelContext)
         let now = Date()
-        let samples: [(TimeInterval, TripClassification, String)] = [
-            (3600, .business, "Client visit"),
-            (7200, .undecided, ""),
-            (10800, .personal, "Groceries"),
+        let samples: [(TimeInterval, TripClassification, String, String, String)] = [
+            (3600, .business, "Client visit", "123 St Georges Tce, Perth WA", "1 Adelaide Tce, Perth WA"),
+            (7200, .undecided, "", "", ""),
+            (10800, .personal, "Groceries", "Home", "Coles Subiaco"),
         ]
-        for (offset, classification, purpose) in samples {
+        for (offset, classification, purpose, fromAddr, toAddr) in samples {
             let end = now.addingTimeInterval(-offset)
             let start = end.addingTimeInterval(-2400)
             let points: [CoordinatePoint] = [
@@ -194,6 +194,8 @@ struct HomeView: View {
                 classification: classification,
                 purpose: purpose,
                 notes: "",
+                fromAddress: fromAddr,
+                toAddress: toAddr,
                 isManual: true,
                 isAutoDetected: false,
                 routePoints: points

@@ -39,6 +39,7 @@
 		A0E14BEBF9BA15C8D6E76046 /* WidgetSharedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD9592E4AE2AF0E5D30CD53 /* WidgetSharedStore.swift */; };
 		A2001475FC97F3C98266BF16 /* RatePreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDFC6B5A3C61FFD2CDAE3505 /* RatePreset.swift */; };
 		A6EA5EBDA8F2C3581DD22B8E /* ModelContainer+Calmiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 034F3B454FD1661218A4D48F /* ModelContainer+Calmiles.swift */; };
+		AEE41C1C5046ADAAEFA04C27 /* GeocodingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 965168D9E023319F0E3DC5AA /* GeocodingService.swift */; };
 		B8531C667C073493ABB4E435 /* ExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC35FEAF98E15A8BA6191F74 /* ExportView.swift */; };
 		BE9AE531A5E07D7B7DAB2872 /* RootTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A824BA67E3972592F8B71FA /* RootTabView.swift */; };
 		C3F3B84011D50E59CE7646A8 /* StudioURLs.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE0C6B4A82A73CCB37369367 /* StudioURLs.swift */; };
@@ -128,6 +129,7 @@
 		8566992ADB6BF8CF91A91925 /* CoordinatePoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatePoint.swift; sourceTree = "<group>"; };
 		867A60903C3B197C78D7B354 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		959206240145F3B875F64907 /* ScreenshotUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotUITests.swift; sourceTree = "<group>"; };
+		965168D9E023319F0E3DC5AA /* GeocodingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeocodingService.swift; sourceTree = "<group>"; };
 		A43E45155E25C58E82C13DB8 /* CalmilesUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CalmilesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B04F24B5742D7F3F39F0CC5F /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
 		B31C4D98577AE42DBFBAA1DE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -295,6 +297,7 @@
 			children = (
 				4C0C64AE763148F99B831980 /* ClassificationService.swift */,
 				CCC21CE34F45AF477D796FFF /* DistanceCalculator.swift */,
+				965168D9E023319F0E3DC5AA /* GeocodingService.swift */,
 				0C741DEAC1B5A88304AD4697 /* RateEstimator.swift */,
 			);
 			path = Services;
@@ -606,6 +609,7 @@
 				D40186E7910EF29BA20A0809 /* ExportService.swift in Sources */,
 				B8531C667C073493ABB4E435 /* ExportView.swift in Sources */,
 				DB6F7CB1B2016E0A44200B82 /* FriendSharePromptStore.swift in Sources */,
+				AEE41C1C5046ADAAEFA04C27 /* GeocodingService.swift in Sources */,
 				89F31A41B5083C0CBB153104 /* HomeView.swift in Sources */,
 				A6EA5EBDA8F2C3581DD22B8E /* ModelContainer+Calmiles.swift in Sources */,
 				0BB5FD2C73905F0A8AB932ED /* OnboardingView.swift in Sources */,
@@ -730,7 +734,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 8KV5SRG3UC;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -907,7 +911,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 8KV5SRG3UC;
 				ENABLE_NS_ASSERTIONS = NO;

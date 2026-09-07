@@ -34,6 +34,9 @@ struct TripDetailView: View {
             AnalyticsStub.screen("trip_detail")
             updateCamera()
         }
+        .onChange(of: trip.routeData) { _, _ in
+            updateCamera()
+        }
     }
 
     @ViewBuilder
@@ -57,6 +60,21 @@ struct TripDetailView: View {
             .frame(height: 220)
             .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
             .accessibilityLabel("Trip route map")
+        } else if trip.hasAddressRoute {
+            CalmilesCard {
+                VStack(alignment: .leading, spacing: 8) {
+                    Label("Map unavailable for this route", systemImage: "map")
+                        .foregroundStyle(Color.calmilesSecondaryText)
+                    if let route = trip.routeLabel {
+                        Text(route)
+                            .font(CalmilesTypography.callout)
+                            .foregroundStyle(Color.calmilesPrimaryText)
+                    }
+                    Text("Addresses are saved. We couldn’t place them on the map.")
+                        .font(CalmilesTypography.caption)
+                        .foregroundStyle(Color.calmilesSecondaryText)
+                }
+            }
         } else {
             CalmilesCard {
                 Label("No route polyline for this trip", systemImage: "map")
@@ -68,6 +86,9 @@ struct TripDetailView: View {
     private var statsSection: some View {
         CalmilesCard {
             VStack(alignment: .leading, spacing: 8) {
+                if let route = trip.routeLabel {
+                    labeled("Route", route)
+                }
                 labeled("Distance", distanceText)
                 labeled("Duration", durationText)
                 labeled("When", trip.startDate.formatted(date: .abbreviated, time: .shortened)
@@ -148,10 +169,12 @@ struct TripDetailView: View {
     }
 
     private func labeled(_ title: String, _ value: String) -> some View {
-        HStack {
+        HStack(alignment: .top) {
             Text(title).foregroundStyle(Color.calmilesSecondaryText)
             Spacer()
-            Text(value).foregroundStyle(Color.calmilesPrimaryText)
+            Text(value)
+                .foregroundStyle(Color.calmilesPrimaryText)
+                .multilineTextAlignment(.trailing)
         }
         .font(CalmilesTypography.body)
     }

@@ -10,6 +10,8 @@ struct ExportService {
         var classification: TripClassification
         var purpose: String
         var notes: String
+        var fromAddress: String
+        var toAddress: String
         var isManual: Bool
     }
 
@@ -27,6 +29,8 @@ struct ExportService {
                 classification: $0.classification,
                 purpose: $0.purpose,
                 notes: $0.notes,
+                fromAddress: $0.fromAddress,
+                toAddress: $0.toAddress,
                 isManual: $0.isManual
             )
         }
@@ -41,7 +45,7 @@ struct ExportService {
         lines.append("")
         let header = [
             "Date", "Start", "End", "Duration_min",
-            "Distance_\(unit.shortLabel)", "Classification", "Purpose", "Notes",
+            "Distance_\(unit.shortLabel)", "Classification", "From", "To", "Purpose", "Notes",
             "Source", "Estimate_Amount", "Currency", "Rate_Preset"
         ]
         lines.append(header.joined(separator: ","))
@@ -68,6 +72,8 @@ struct ExportService {
                 "\(durationMin)",
                 String(format: "%.3f", distance),
                 row.classification.displayName,
+                csvEscape(row.fromAddress),
+                csvEscape(row.toAddress),
                 csvEscape(row.purpose),
                 csvEscape(row.notes),
                 row.isManual ? "manual" : "auto",
@@ -111,7 +117,7 @@ struct ExportService {
             df.timeStyle = .short
 
             for row in rows {
-                if y > pageRect.height - 80 { newPage() }
+                if y > pageRect.height - 100 { newPage() }
                 let distance = DistanceCalculator.convert(meters: row.distanceMeters, to: unit)
                 var line = "\(df.string(from: row.start))  \(String(format: "%.1f %@", distance, unit.shortLabel))  \(row.classification.displayName)"
                 if !row.purpose.isEmpty { line += "  · \(row.purpose)" }
@@ -124,7 +130,25 @@ struct ExportService {
                     .font: UIFont.systemFont(ofSize: 11),
                     .foregroundColor: UIColor.label
                 ])
-                y += 18
+                y += 16
+                let from = row.fromAddress.trimmingCharacters(in: .whitespacesAndNewlines)
+                let to = row.toAddress.trimmingCharacters(in: .whitespacesAndNewlines)
+                if !from.isEmpty || !to.isEmpty {
+                    let routeLine: String
+                    if !from.isEmpty && !to.isEmpty {
+                        routeLine = "\(from) → \(to)"
+                    } else if !from.isEmpty {
+                        routeLine = "From \(from)"
+                    } else {
+                        routeLine = "To \(to)"
+                    }
+                    (routeLine as NSString).draw(at: CGPoint(x: 48, y: y), withAttributes: [
+                        .font: UIFont.systemFont(ofSize: 9),
+                        .foregroundColor: UIColor.secondaryLabel
+                    ])
+                    y += 14
+                }
+                y += 4
             }
 
             if y > pageRect.height - 60 { newPage() }
