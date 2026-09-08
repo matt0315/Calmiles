@@ -108,7 +108,7 @@ struct CalmilesApp: App {
                 Text("If Calmiles is helping you track mileage, share it with a friend who freelances too.")
             }
             .sheet(isPresented: $showShareSheet) {
-                ActivityView(activityItems: [StudioURLs.friendShareText, StudioURLs.website])
+                ActivityView(activityItems: [StudioURLs.friendShareText])
             }
         }
     }

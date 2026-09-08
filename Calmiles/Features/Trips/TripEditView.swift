@@ -7,12 +7,20 @@ enum TripEditMode {
     case edit(TripEntity)
 }
 
+private enum AddressField: Hashable {
+    case from
+    case to
+}
+
 struct TripEditView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var settings: SettingsStore
 
     let mode: TripEditMode
+
+    @StateObject private var addressSearch = AddressSearchCompleter()
+    @FocusState private var focusedAddress: AddressField?
 
     @State private var startDate = Date().addingTimeInterval(-3600)
     @State private var endDate = Date()
@@ -38,19 +46,25 @@ struct TripEditView: View {
     @State private var suppressOverrideTracking = false
     @State private var lastRoutedFrom = ""
     @State private var lastRoutedTo = ""
+    @State private var fromPlace: GeocodingService.ResolvedPlace?
+    @State private var toPlace: GeocodingService.ResolvedPlace?
+    @State private var applyingAddress = false
+    @State private var isLoadingForm = true
+    @State private var calculatedDistanceMeters: Double?
+    @State private var routeGeneration = 0
 
     var body: some View {
         NavigationStack {
             Form {
                 Section("Route") {
-                    TextField("From", text: $fromAddress)
-                        .textContentType(.fullStreetAddress)
-                        .autocorrectionDisabled()
-                        .onSubmit { scheduleRouteCalculation(immediate: true) }
-                    TextField("To", text: $toAddress)
-                        .textContentType(.fullStreetAddress)
-                        .autocorrectionDisabled()
-                        .onSubmit { scheduleRouteCalculation(immediate: true) }
+                    addressField(title: "From", text: $fromAddress, field: .from, place: fromPlace)
+                    if focusedAddress == .from {
+                        suggestionList
+                    }
+                    addressField(title: "To", text: $toAddress, field: .to, place: toPlace)
+                    if focusedAddress == .to {
+                        suggestionList
+                    }
                     if isRouting {
                         HStack(spacing: 8) {
                             ProgressView()
@@ -105,7 +119,11 @@ struct TripEditView: View {
                         .keyboardType(.decimalPad)
                         .onChange(of: distanceValue) { _, _ in
                             guard !suppressOverrideTracking else { return }
-                            if expectedTravelTime != nil || !previewPoints.isEmpty {
+                            // Only lock distance after a route has been applied or the user edits
+                            // a calculated value. The initial "10" is a placeholder, not an override.
+                            if expectedTravelTime != nil || !previewPoints.isEmpty || calculatedDistanceMeters != nil {
+                                distanceOverridden = true
+                            } else if distanceValue.trimmingCharacters(in: .whitespaces) != "10" {
                                 distanceOverridden = true
                             }
                         }
@@ -146,8 +164,20 @@ struct TripEditView: View {
             }
             .interactiveDismissDisabled(isSaving)
             .onAppear(perform: load)
-            .onChange(of: fromAddress) { _, _ in scheduleRouteCalculation(immediate: false) }
-            .onChange(of: toAddress) { _, _ in scheduleRouteCalculation(immediate: false) }
+            .onChange(of: fromAddress) { _, _ in
+                handleAddressTextChanged(.from)
+            }
+            .onChange(of: toAddress) { _, _ in
+                handleAddressTextChanged(.to)
+            }
+            .onChange(of: focusedAddress) { _, field in
+                addressSearch.setHint(searchHint)
+                if let field {
+                    addressSearch.updateQuery(text(for: field))
+                } else {
+                    addressSearch.clear()
+                }
+            }
             .onChange(of: startDate) { _, newStart in
                 if !endOverridden, let travel = expectedTravelTime {
                     suppressOverrideTracking = true
@@ -181,10 +211,69 @@ struct TripEditView: View {
     private var canAttemptRoute: Bool {
         let from = fromAddress.trimmingCharacters(in: .whitespacesAndNewlines)
         let to = toAddress.trimmingCharacters(in: .whitespacesAndNewlines)
-        return !from.isEmpty && !to.isEmpty
+        return from.count >= 3 && to.count >= 3
+    }
+
+    private var searchHint: CLLocationCoordinate2D? {
+        TripDetectionService.shared.lastKnownCoordinate
+    }
+
+    @ViewBuilder
+    private func addressField(
+        title: String,
+        text: Binding<String>,
+        field: AddressField,
+        place: GeocodingService.ResolvedPlace?
+    ) -> some View {
+        TextField(title, text: text)
+            .textContentType(.fullStreetAddress)
+            .textInputAutocapitalization(.words)
+            .autocorrectionDisabled()
+            .focused($focusedAddress, equals: field)
+            .submitLabel(.next)
+            .onSubmit { scheduleRouteCalculation(immediate: true) }
+            .accessibilityLabel(title)
+            .accessibilityHint(place == nil ? "Type an address. Suggestions appear as you type." : "Address selected")
+    }
+
+    @ViewBuilder
+    private var suggestionList: some View {
+        if addressSearch.suggestions.isEmpty {
+            EmptyView()
+        } else {
+            ForEach(Array(addressSearch.suggestions.enumerated()), id: \.offset) { _, completion in
+                Button {
+                    Task { await select(completion) }
+                } label: {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(completion.title)
+                            .font(CalmilesTypography.body)
+                            .foregroundStyle(Color.calmilesPrimaryText)
+                        if !completion.subtitle.isEmpty {
+                            Text(completion.subtitle)
+                                .font(CalmilesTypography.caption)
+                                .foregroundStyle(Color.calmilesSecondaryText)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("\(completion.title), \(completion.subtitle)")
+            }
+        }
+    }
+
+    private func text(for field: AddressField) -> String {
+        switch field {
+        case .from: return fromAddress
+        case .to: return toAddress
+        }
     }
 
     private func load() {
+        isLoadingForm = true
+        addressSearch.setHint(searchHint)
         if case .edit(let trip) = mode {
             startDate = trip.startDate
             endDate = trip.endDate
@@ -195,8 +284,13 @@ struct TripEditView: View {
             classification = trip.classification
             purpose = trip.purpose
             notes = trip.notes
-            previewPoints = trip.routePoints
-            updateCamera(with: previewPoints)
+            // Don't preview a stored 2-point chord — that's the old geodesic, not a road.
+            if trip.routePoints.count >= 3 {
+                previewPoints = trip.routePoints
+                updateCamera(with: previewPoints)
+            } else {
+                previewPoints = []
+            }
             // Existing distance/end are treated as authoritative until addresses change.
             distanceOverridden = true
             endOverridden = true
@@ -206,93 +300,191 @@ struct TripEditView: View {
             if travel > 0 {
                 expectedTravelTime = travel
             }
+            calculatedDistanceMeters = trip.distanceMeters
         }
+        isLoadingForm = false
         if canAttemptRoute {
             scheduleRouteCalculation(immediate: true)
         }
     }
 
-    private func scheduleRouteCalculation(immediate: Bool) {
-        routeTask?.cancel()
+    private func handleAddressTextChanged(_ field: AddressField) {
+        guard !isLoadingForm, !applyingAddress else { return }
+        switch field {
+        case .from:
+            if !placeMatches(fromPlace, query: fromAddress) { fromPlace = nil }
+        case .to:
+            if !placeMatches(toPlace, query: toAddress) { toPlace = nil }
+        }
+        if focusedAddress == field {
+            addressSearch.setHint(searchHint)
+            addressSearch.updateQuery(text(for: field))
+        }
         let from = fromAddress.trimmingCharacters(in: .whitespacesAndNewlines)
         let to = toAddress.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !from.isEmpty, !to.isEmpty else {
-            isRouting = false
-            routeStatusMessage = nil
-            previewPoints = []
-            expectedTravelTime = nil
-            lastRoutedFrom = ""
-            lastRoutedTo = ""
-            return
-        }
-        // Skip if addresses unchanged and we already have a route.
-        if from == lastRoutedFrom, to == lastRoutedTo, previewPoints.count >= 2, !immediate {
-            return
-        }
-        // New addresses → allow auto distance / end from the fresh route.
         if from != lastRoutedFrom || to != lastRoutedTo {
-            distanceOverridden = false
-            endOverridden = false
+            // A new pair should receive the calculated km / ETA, not the 10 km / 1h placeholders.
+            if !from.isEmpty, !to.isEmpty {
+                distanceOverridden = false
+                endOverridden = false
+            }
+        }
+        scheduleRouteCalculation(immediate: false)
+    }
+
+    private func placeMatches(_ place: GeocodingService.ResolvedPlace?, query: String) -> Bool {
+        guard let place else { return false }
+        let q = query.trimmingCharacters(in: .whitespacesAndNewlines)
+        return q == place.display || fromOrToContains(place.display, query: q)
+    }
+
+    private func fromOrToContains(_ display: String, query: String) -> Bool {
+        let q = query.lowercased()
+        let d = display.lowercased()
+        return !q.isEmpty && (d == q || d.hasPrefix(q) || q.hasPrefix(d))
+    }
+
+    private func select(_ completion: MKLocalSearchCompletion) async {
+        let field = focusedAddress ?? .from
+        let display = GeocodingService.displayString(title: completion.title, subtitle: completion.subtitle)
+        applyingAddress = true
+        switch field {
+        case .from:
+            fromAddress = display
+            fromPlace = nil
+        case .to:
+            toAddress = display
+            toPlace = nil
+        }
+        addressSearch.clear()
+        applyingAddress = false
+
+        do {
+            let place = try await GeocodingService.resolve(completion: completion, near: searchHint ?? GeocodingService.perthCenter)
+            applyingAddress = true
+            switch field {
+            case .from:
+                fromPlace = place
+                if fromAddress != place.display {
+                    fromAddress = place.display
+                }
+            case .to:
+                toPlace = place
+                if toAddress != place.display {
+                    toAddress = place.display
+                }
+            }
+            applyingAddress = false
+            focusedAddress = field == .from ? .to : nil
+            scheduleRouteCalculation(immediate: true)
+        } catch {
+            applyingAddress = false
+            routeStatusMessage = "Couldn’t look up that address. Try another suggestion."
+        }
+    }
+
+    private func scheduleRouteCalculation(immediate: Bool) {
+        routeTask?.cancel()
+        routeGeneration += 1
+        let generation = routeGeneration
+        let from = fromAddress.trimmingCharacters(in: .whitespacesAndNewlines)
+        let to = toAddress.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard from.count >= 3, to.count >= 3 else {
+            isRouting = false
+            if from.isEmpty || to.isEmpty {
+                routeStatusMessage = nil
+                previewPoints = []
+                expectedTravelTime = nil
+                calculatedDistanceMeters = nil
+                lastRoutedFrom = ""
+                lastRoutedTo = ""
+            }
+            return
+        }
+        // Skip if addresses unchanged and we already have a real road route.
+        if from == lastRoutedFrom, to == lastRoutedTo, previewPoints.count >= 3, !immediate {
+            return
         }
         routeTask = Task { @MainActor in
             if !immediate {
-                try? await Task.sleep(nanoseconds: 800_000_000)
+                try? await Task.sleep(nanoseconds: 700_000_000)
                 if Task.isCancelled { return }
             }
-            await calculateRoute()
+            await calculateRoute(generation: generation)
         }
     }
 
     @MainActor
     private func calculateRoute() async {
+        routeGeneration += 1
+        await calculateRoute(generation: routeGeneration)
+    }
+
+    @MainActor
+    private func calculateRoute(generation: Int) async {
         let from = fromAddress.trimmingCharacters(in: .whitespacesAndNewlines)
         let to = toAddress.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !from.isEmpty, !to.isEmpty else { return }
+        guard from.count >= 3, to.count >= 3 else { return }
+        guard generation == routeGeneration else { return }
 
         isRouting = true
         routeStatusMessage = nil
-        defer { isRouting = false }
+        defer { if generation == routeGeneration { isRouting = false } }
 
         do {
             let journey = try await GeocodingService.directionsRoute(
                 from: from,
                 to: to,
-                startDate: startDate
+                startDate: startDate,
+                fromPlace: matchingPlace(fromPlace, query: from),
+                toPlace: matchingPlace(toPlace, query: to),
+                near: searchHint
             )
-            if Task.isCancelled { return }
-            previewPoints = journey.points
-            expectedTravelTime = journey.expectedTravelTime
-            lastRoutedFrom = from
-            lastRoutedTo = to
-            updateCamera(with: journey.points)
-
-            suppressOverrideTracking = true
-            if !distanceOverridden {
-                let display = DistanceCalculator.convert(
-                    meters: journey.distanceMeters,
-                    to: settings.settings.distanceUnit
-                )
-                distanceValue = String(format: "%.2f", display)
-            }
-            if !endOverridden {
-                endDate = startDate.addingTimeInterval(journey.expectedTravelTime)
-            }
-            suppressOverrideTracking = false
-            let distLabel = String(
-                format: "%.1f %@",
-                DistanceCalculator.convert(meters: journey.distanceMeters, to: settings.settings.distanceUnit),
-                settings.settings.distanceUnit.shortLabel
-            )
-            let mins = Int((journey.expectedTravelTime / 60).rounded())
-            routeStatusMessage = "Route ready · \(distLabel) · ~\(mins) min"
+            if Task.isCancelled || generation != routeGeneration { return }
+            apply(journey, from: from, to: to)
         } catch {
-            if Task.isCancelled { return }
+            if Task.isCancelled || generation != routeGeneration { return }
             previewPoints = []
             expectedTravelTime = nil
+            calculatedDistanceMeters = nil
             lastRoutedFrom = ""
             lastRoutedTo = ""
             routeStatusMessage = "Couldn’t calculate a driving route for these addresses."
         }
+    }
+
+    private func matchingPlace(_ place: GeocodingService.ResolvedPlace?, query: String) -> GeocodingService.ResolvedPlace? {
+        guard let place, fromOrToContains(place.display, query: query) || query == place.display else { return nil }
+        return place
+    }
+
+    private func apply(_ journey: GeocodingService.RoutedJourney, from: String, to: String) {
+        previewPoints = journey.points
+        expectedTravelTime = journey.expectedTravelTime
+        calculatedDistanceMeters = journey.distanceMeters
+        lastRoutedFrom = from
+        lastRoutedTo = to
+        updateCamera(with: journey.points)
+
+        suppressOverrideTracking = true
+        if !distanceOverridden {
+            let display = DistanceCalculator.convert(
+                meters: journey.distanceMeters,
+                to: settings.settings.distanceUnit
+            )
+            distanceValue = String(format: "%.2f", display)
+        }
+        if !endOverridden {
+            endDate = startDate.addingTimeInterval(journey.expectedTravelTime)
+        }
+        suppressOverrideTracking = false
+        let distLabel = String(
+            format: "%.1f %@",
+            DistanceCalculator.convert(meters: journey.distanceMeters, to: settings.settings.distanceUnit),
+            settings.settings.distanceUnit.shortLabel
+        )
+        let mins = Int((journey.expectedTravelTime / 60).rounded())
+        routeStatusMessage = "Route ready · \(distLabel) · ~\(mins) min"
     }
 
     private func restampPreview(from start: Date, travel: TimeInterval) {
@@ -336,20 +528,49 @@ struct TripEditView: View {
     @MainActor
     private func save() async {
         errorMessage = nil
+        focusedAddress = nil
+        addressSearch.clear()
+
+        let from = fromAddress.trimmingCharacters(in: .whitespacesAndNewlines)
+        let to = toAddress.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        // Wait out a debounced calc, then make sure distance/end come from the road route.
+        if !from.isEmpty, !to.isEmpty {
+            routeTask?.cancel()
+            await calculateRoute()
+        }
+
         guard endDate >= startDate else {
             errorMessage = "End must be after start."
             return
         }
-        guard let distance = Double(distanceValue.replacingOccurrences(of: ",", with: ".")), distance >= 0 else {
+
+        let journeyMeters = calculatedDistanceMeters
+        let shouldUseRouteDistance = !distanceOverridden && journeyMeters != nil
+        let parsed = Double(distanceValue.replacingOccurrences(of: ",", with: "."))
+        let displayDistance: Double
+        if shouldUseRouteDistance, let journeyMeters {
+            displayDistance = DistanceCalculator.convert(meters: journeyMeters, to: settings.settings.distanceUnit)
+            distanceValue = String(format: "%.2f", displayDistance)
+        } else if let parsed, parsed >= 0 {
+            displayDistance = parsed
+        } else {
             errorMessage = "Enter a valid distance."
             return
         }
-        let meters: Double = settings.settings.distanceUnit == .miles
-            ? DistanceCalculator.milesToMeters(distance)
-            : DistanceCalculator.kilometersToMeters(distance)
 
-        let from = fromAddress.trimmingCharacters(in: .whitespacesAndNewlines)
-        let to = toAddress.trimmingCharacters(in: .whitespacesAndNewlines)
+        let meters: Double
+        if shouldUseRouteDistance, let journeyMeters {
+            meters = journeyMeters
+        } else {
+            meters = settings.settings.distanceUnit == .miles
+                ? DistanceCalculator.milesToMeters(displayDistance)
+                : DistanceCalculator.kilometersToMeters(displayDistance)
+        }
+
+        if !endOverridden, let travel = expectedTravelTime {
+            endDate = startDate.addingTimeInterval(travel)
+        }
 
         isSaving = true
         defer { isSaving = false }
@@ -357,29 +578,32 @@ struct TripEditView: View {
         var routed: GeocodingService.RoutedJourney?
         var routeFailed = false
         if !from.isEmpty && !to.isEmpty {
-            // Prefer live preview if it matches current addresses; otherwise recalculate.
-            if from == lastRoutedFrom, to == lastRoutedTo, previewPoints.count >= 2, let travel = expectedTravelTime {
-                let pathMeters: Double = {
-                    // Recompute distance from current distance field (may be overridden).
-                    return meters
-                }()
-                _ = pathMeters
+            if from == lastRoutedFrom, to == lastRoutedTo, previewPoints.count >= 3, let travel = expectedTravelTime {
                 routed = GeocodingService.RoutedJourney(
                     points: previewPoints,
-                    distanceMeters: meters,
+                    distanceMeters: journeyMeters ?? meters,
                     expectedTravelTime: travel
                 )
             } else if let journey = await GeocodingService.directionsRouteOrNil(
                 from: from,
                 to: to,
-                startDate: startDate
+                startDate: startDate,
+                fromPlace: matchingPlace(fromPlace, query: from),
+                toPlace: matchingPlace(toPlace, query: to),
+                near: searchHint
             ) {
+                apply(journey, from: from, to: to)
                 routed = journey
-                previewPoints = journey.points
-                expectedTravelTime = journey.expectedTravelTime
             } else {
                 routeFailed = true
             }
+        }
+
+        let savedMeters: Double
+        if !distanceOverridden, let routed {
+            savedMeters = routed.distanceMeters
+        } else {
+            savedMeters = meters
         }
 
         do {
@@ -389,7 +613,7 @@ struct TripEditView: View {
                 let trip = TripEntity(
                     startDate: startDate,
                     endDate: endDate,
-                    distanceMeters: meters,
+                    distanceMeters: savedMeters,
                     classification: classification,
                     purpose: purpose,
                     notes: notes,
@@ -403,7 +627,7 @@ struct TripEditView: View {
             case .edit(let trip):
                 trip.startDate = startDate
                 trip.endDate = endDate
-                trip.distanceMeters = meters
+                trip.distanceMeters = savedMeters
                 trip.classification = classification
                 trip.purpose = purpose
                 trip.notes = notes
@@ -419,6 +643,7 @@ struct TripEditView: View {
                             trip.routePoints = []
                         }
                     } else if routeFailed, trip.isManual {
+                        // Drop the old straight-line chord; don't keep a fake ocean line.
                         trip.routePoints = []
                     }
                 }

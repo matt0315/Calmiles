@@ -112,7 +112,7 @@ struct SettingsView: View {
             .navigationTitle("Settings")
             .sheet(isPresented: $showPaywall) { PaywallView() }
             .sheet(isPresented: $showShareSheet) {
-                ActivityView(activityItems: [StudioURLs.friendShareText, StudioURLs.website])
+                ActivityView(activityItems: [StudioURLs.friendShareText])
             }
             .confirmationDialog("Delete all trips? This cannot be undone.", isPresented: $showDeleteConfirm, titleVisibility: .visible) {
                 Button("Delete All", role: .destructive) { deleteAll() }

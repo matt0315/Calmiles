@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		047987D30BEF3BEE51BCC18C /* AddressSearchCompleter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C630C8377340C508C921827B /* AddressSearchCompleter.swift */; };
 		0BB5FD2C73905F0A8AB932ED /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB57707987C5976F7D7473D /* OnboardingView.swift */; };
 		0E7DD14A574370E9A9EF4900 /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A34CACC0C8E47FA0E26E83 /* SettingsStore.swift */; };
 		1670CC774601D900E95B6A75 /* TripEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3818C52CAB56524CB81F01A7 /* TripEditView.swift */; };
@@ -35,10 +36,12 @@
 		8B3E8703515F2748E99894EF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B31C4D98577AE42DBFBAA1DE /* Assets.xcassets */; };
 		929B19F4547CECA1962CB957 /* CalmilesWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 5905ED886A9EEDA11F97EBE3 /* CalmilesWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		959446C69D2E361369F5524F /* CalmilesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45DBBECD2EF28FF454B1DDFA /* CalmilesUITests.swift */; };
+		9624E6912A92E01536C68B68 /* TripStartPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99BC0AA82E3454568343B45C /* TripStartPolicy.swift */; };
 		9B4042898B6E87852431BC79 /* RateEstimatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E12F0409F1086C2CFB40880C /* RateEstimatorTests.swift */; };
 		A0E14BEBF9BA15C8D6E76046 /* WidgetSharedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD9592E4AE2AF0E5D30CD53 /* WidgetSharedStore.swift */; };
 		A2001475FC97F3C98266BF16 /* RatePreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDFC6B5A3C61FFD2CDAE3505 /* RatePreset.swift */; };
 		A6EA5EBDA8F2C3581DD22B8E /* ModelContainer+Calmiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 034F3B454FD1661218A4D48F /* ModelContainer+Calmiles.swift */; };
+		AA712632902166DD113C1A91 /* TripStartPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B642E2F987E83F350976007 /* TripStartPolicyTests.swift */; };
 		AEE41C1C5046ADAAEFA04C27 /* GeocodingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 965168D9E023319F0E3DC5AA /* GeocodingService.swift */; };
 		B8531C667C073493ABB4E435 /* ExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC35FEAF98E15A8BA6191F74 /* ExportView.swift */; };
 		BE9AE531A5E07D7B7DAB2872 /* RootTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A824BA67E3972592F8B71FA /* RootTabView.swift */; };
@@ -117,6 +120,7 @@
 		4D6651CECE5A2FC6F510E8ED /* CalmilesWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CalmilesWidget.entitlements; sourceTree = "<group>"; };
 		4DB02E5015FA3BFC4B46265E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5905ED886A9EEDA11F97EBE3 /* CalmilesWidgetExtension.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = CalmilesWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		5B642E2F987E83F350976007 /* TripStartPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripStartPolicyTests.swift; sourceTree = "<group>"; };
 		61F2AF10619CDEAB586D496B /* Calmiles.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Calmiles.entitlements; sourceTree = "<group>"; };
 		6A824BA67E3972592F8B71FA /* RootTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabView.swift; sourceTree = "<group>"; };
 		71BE370F2F5AEA39B01FD164 /* TripEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripEntity.swift; sourceTree = "<group>"; };
@@ -130,6 +134,7 @@
 		867A60903C3B197C78D7B354 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		959206240145F3B875F64907 /* ScreenshotUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotUITests.swift; sourceTree = "<group>"; };
 		965168D9E023319F0E3DC5AA /* GeocodingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeocodingService.swift; sourceTree = "<group>"; };
+		99BC0AA82E3454568343B45C /* TripStartPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripStartPolicy.swift; sourceTree = "<group>"; };
 		A43E45155E25C58E82C13DB8 /* CalmilesUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CalmilesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B04F24B5742D7F3F39F0CC5F /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
 		B31C4D98577AE42DBFBAA1DE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -139,6 +144,7 @@
 		BCD9592E4AE2AF0E5D30CD53 /* WidgetSharedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetSharedStore.swift; sourceTree = "<group>"; };
 		BE24DCBEF6AFDA51D3995554 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		C07BB883F81B26AF91584EA8 /* BotlandStudioSplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotlandStudioSplashView.swift; sourceTree = "<group>"; };
+		C630C8377340C508C921827B /* AddressSearchCompleter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSearchCompleter.swift; sourceTree = "<group>"; };
 		CCC21CE34F45AF477D796FFF /* DistanceCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceCalculator.swift; sourceTree = "<group>"; };
 		CDFC6B5A3C61FFD2CDAE3505 /* RatePreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatePreset.swift; sourceTree = "<group>"; };
 		D6D75183B242C8792C69E640 /* CalmilesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalmilesApp.swift; sourceTree = "<group>"; };
@@ -265,6 +271,7 @@
 		45823BDD3EA75D804165228D /* Trips */ = {
 			isa = PBXGroup;
 			children = (
+				C630C8377340C508C921827B /* AddressSearchCompleter.swift */,
 				065A2BDE004E978117FC2BB1 /* TripDetailView.swift */,
 				3818C52CAB56524CB81F01A7 /* TripEditView.swift */,
 				3DC966C0D7F8D7A3F156110A /* TripRowView.swift */,
@@ -288,6 +295,7 @@
 				E830733651A912E314BDE68E /* ClassificationServiceTests.swift */,
 				B406CECF6A111364933B6EB2 /* DistanceCalculatorTests.swift */,
 				E12F0409F1086C2CFB40880C /* RateEstimatorTests.swift */,
+				5B642E2F987E83F350976007 /* TripStartPolicyTests.swift */,
 			);
 			path = CalmilesTests;
 			sourceTree = "<group>";
@@ -299,6 +307,7 @@
 				CCC21CE34F45AF477D796FFF /* DistanceCalculator.swift */,
 				965168D9E023319F0E3DC5AA /* GeocodingService.swift */,
 				0C741DEAC1B5A88304AD4697 /* RateEstimator.swift */,
+				99BC0AA82E3454568343B45C /* TripStartPolicy.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -596,6 +605,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				047987D30BEF3BEE51BCC18C /* AddressSearchCompleter.swift in Sources */,
 				D36DFA4B5062E84F4AC7F96F /* AnalyticsStub.swift in Sources */,
 				CD0B990439FAAE72866DA6BA /* AppSettings.swift in Sources */,
 				5D9044F6BB0944BF2D356644 /* BotlandStudioSplashView.swift in Sources */,
@@ -628,6 +638,7 @@
 				17F9801EC54074323F2F218E /* TripEntity.swift in Sources */,
 				D6E0AA825AC82CC23742F3C3 /* TripRepository.swift in Sources */,
 				379BDEB63B252914CB1DFB40 /* TripRowView.swift in Sources */,
+				9624E6912A92E01536C68B68 /* TripStartPolicy.swift in Sources */,
 				7AE597B69D5112BE33908E47 /* TripsListView.swift in Sources */,
 				4F71943A55BA727D1947213E /* Typography.swift in Sources */,
 				A0E14BEBF9BA15C8D6E76046 /* WidgetSharedStore.swift in Sources */,
@@ -660,6 +671,7 @@
 				4ECE303A8077FB31BCDF0F13 /* ClassificationServiceTests.swift in Sources */,
 				D4ADA1EEE0A2CEDBC07D006D /* DistanceCalculatorTests.swift in Sources */,
 				9B4042898B6E87852431BC79 /* RateEstimatorTests.swift in Sources */,
+				AA712632902166DD113C1A91 /* TripStartPolicyTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -734,7 +746,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 8KV5SRG3UC;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -911,7 +923,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 8KV5SRG3UC;
 				ENABLE_NS_ASSERTIONS = NO;
