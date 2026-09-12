@@ -59,7 +59,7 @@ struct OnboardingView: View {
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 28)
             Spacer()
-            CalmilesPrimaryButton(title: "Allow Location") {
+            CalmilesPrimaryButton(title: "Continue") {
                 tripDetection.requestWhenInUse()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                     tripDetection.requestAlways()

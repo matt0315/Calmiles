@@ -3,8 +3,9 @@ import CoreLocation
 import os.log
 
 /// Background trip auto-detect via Core Location visits, significant-change, and
-/// standard updates. Starts from the last parked point when a wake-up is late.
-/// Honest battery disclosure is in Info.plist and onboarding.
+/// standard updates. Starts from the last parked point when a wake-up is late,
+/// ends on destination dwell (not “back near home”), and persists an in-flight
+/// trip across process death. Honest battery disclosure is in Info.plist / onboarding.
 @MainActor
 final class TripDetectionService: NSObject, ObservableObject {
     static let shared = TripDetectionService()
@@ -25,18 +26,24 @@ final class TripDetectionService: NSObject, ObservableObject {
 
     private var tripStart: Date?
     private var isInMotionTrip = false
-    private let stationaryTimeout: TimeInterval = 240
     private var lastMovementAt: Date?
     private var stationaryAnchor: TripStartPolicy.Anchor?
     /// Recent fixes while still parked, so a late "moving" sample can include the departure.
     private var recentFixes: [CoordinatePoint] = []
-    private let recentFixLimit = 12
+    private let recentFixLimit = 16
 
     private enum StoreKeys {
         static let lat = "calmiles.detect.lastLat"
         static let lon = "calmiles.detect.lastLon"
         static let ts = "calmiles.detect.lastTs"
         static let acc = "calmiles.detect.lastAcc"
+        static let activeTrip = "calmiles.detect.activeTrip.v1"
+    }
+
+    private struct ActiveTripSnapshot: Codable {
+        var start: Date
+        var points: [CoordinatePoint]
+        var lastMovementAt: Date?
     }
 
     override init() {
@@ -50,6 +57,7 @@ final class TripDetectionService: NSObject, ObservableObject {
         locationManager.pausesLocationUpdatesAutomatically = false
         locationManager.showsBackgroundLocationIndicator = true
         loadPersistedAnchor()
+        restoreActiveTripIfNeeded()
     }
 
     func requestWhenInUse() {
@@ -66,22 +74,22 @@ final class TripDetectionService: NSObject, ObservableObject {
             lastErrorMessage = "Location permission is required for auto-detect."
             return
         }
-        if authorizationStatus == .authorizedAlways {
-            locationManager.allowsBackgroundLocationUpdates = true
-        }
-        applyIdleAccuracy()
+        configureBackgroundUpdatesIfAllowed()
+        applyIdleOrTripAccuracy()
         locationManager.startUpdatingLocation()
         locationManager.startMonitoringSignificantLocationChanges()
         locationManager.startMonitoringVisits()
+        // Nudge a fresh fix after wake so late departures aren't waiting on the filter alone.
+        locationManager.requestLocation()
         isTracking = true
-        logger.info("Trip detection started")
+        logger.info("Trip detection started (auth=\(self.authorizationStatus.rawValue, privacy: .public), inflight=\(self.isInMotionTrip, privacy: .public))")
     }
 
     func stop() {
         locationManager.stopUpdatingLocation()
         locationManager.stopMonitoringSignificantLocationChanges()
         locationManager.stopMonitoringVisits()
-        finalizeTripIfNeeded()
+        finalizeTripIfNeeded(reason: "stop")
         isTracking = false
         logger.info("Trip detection stopped")
     }
@@ -106,14 +114,24 @@ final class TripDetectionService: NSObject, ObservableObject {
     }
     #endif
 
+    private func configureBackgroundUpdatesIfAllowed() {
+        if authorizationStatus == .authorizedAlways {
+            locationManager.allowsBackgroundLocationUpdates = true
+        }
+    }
+
     private func applyIdleAccuracy() {
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
-        locationManager.distanceFilter = 50
+        locationManager.distanceFilter = 40
     }
 
     private func applyTripAccuracy() {
         locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-        locationManager.distanceFilter = 20
+        locationManager.distanceFilter = 15
+    }
+
+    private func applyIdleOrTripAccuracy() {
+        if isInMotionTrip { applyTripAccuracy() } else { applyIdleAccuracy() }
     }
 
     private func handleLocation(_ location: CLLocation) {
@@ -138,31 +156,33 @@ final class TripDetectionService: NSObject, ObservableObject {
             timestamp: location.timestamp
         )
 
-        if departed {
-            beginOrContinueTrip(with: point)
+        if !isInMotionTrip {
+            if departed {
+                beginOrContinueTrip(with: point)
+                lastMovementAt = location.timestamp
+                persistActiveTrip()
+            } else {
+                // Still parked (or creeping). Keep the last good place so a late wake can backfill.
+                if TripStartPolicy.isUsablePathPoint(accuracy: accuracy) || stationaryAnchor == nil {
+                    rememberStationary(point)
+                }
+                appendRecent(point)
+            }
+            return
+        }
+
+        // In-trip: keep recording; end on destination dwell (not “near original park”).
+        let previous = activePoints.last
+        appendInTrip(point)
+        if TripStartPolicy.isActivelyMoving(speed: speed, from: previous, to: point) {
             lastMovementAt = location.timestamp
-            return
         }
+        persistActiveTrip()
 
-        if isInMotionTrip {
-            if TripStartPolicy.isUsablePathPoint(accuracy: accuracy) {
-                activePoints.append(point)
-            } else if let last = activePoints.last, TripStartPolicy.meters(from: last, to: point) > 120 {
-                // Keep coarse significant-change fixes so the path isn't only the second half.
-                activePoints.append(point)
-            }
-            if let last = lastMovementAt, location.timestamp.timeIntervalSince(last) > stationaryTimeout {
-                rememberStationary(point)
-                finalizeTripIfNeeded()
-            }
-            return
-        }
-
-        // Still parked (or creeping). Keep the last good place so a late wake can backfill.
-        if TripStartPolicy.isUsablePathPoint(accuracy: accuracy) || stationaryAnchor == nil {
+        if TripStartPolicy.isStationaryDwell(points: activePoints, now: location.timestamp) {
             rememberStationary(point)
+            finalizeTripIfNeeded(reason: "dwell")
         }
-        appendRecent(point)
     }
 
     private func beginOrContinueTrip(with point: CoordinatePoint) {
@@ -188,16 +208,29 @@ final class TripDetectionService: NSObject, ObservableObject {
             tripStart = points.first?.timestamp ?? point.timestamp
             recentFixes = []
             logger.info("Trip started, points \(points.count, privacy: .public)")
-        } else if TripStartPolicy.isUsablePathPoint(accuracy: point.horizontalAccuracy ?? 0)
-                    || point.horizontalAccuracy == nil {
+        } else {
+            appendInTrip(point)
+        }
+    }
+
+    private func appendInTrip(_ point: CoordinatePoint) {
+        if TripStartPolicy.isUsablePathPoint(accuracy: point.horizontalAccuracy ?? 0)
+            || point.horizontalAccuracy == nil {
             activePoints.append(point)
         } else if let last = activePoints.last {
             let gap = TripStartPolicy.meters(from: last, to: point)
-            if gap > 80 {
+            // Keep coarse significant-change fixes so background wakes don't drop the path.
+            if gap > 60 {
                 activePoints.append(point)
             }
         } else {
             activePoints.append(point)
+        }
+        // Cap memory for very long drives; keep ends for backfill/finalize.
+        if activePoints.count > 2_500 {
+            let head = Array(activePoints.prefix(1))
+            let tail = Array(activePoints.suffix(2_000))
+            activePoints = head + tail
         }
     }
 
@@ -236,10 +269,14 @@ final class TripDetectionService: NSObject, ObservableObject {
                 lastMovementAt = when
                 activePoints = [point]
                 recentFixes = []
+                persistActiveTrip()
                 logger.info("Trip started from visit departure")
+                // Ask for a fresh stream so the drive is followed even if the next SLC is slow.
+                locationManager.requestLocation()
             } else if let first = activePoints.first, when < first.timestamp {
                 activePoints.insert(point, at: 0)
                 tripStart = when
+                persistActiveTrip()
             }
             return
         }
@@ -254,7 +291,7 @@ final class TripDetectionService: NSObject, ObservableObject {
             rememberStationary(point)
             if isInMotionTrip {
                 activePoints.append(point)
-                finalizeTripIfNeeded()
+                finalizeTripIfNeeded(reason: "visit_arrival")
             }
         }
     }
@@ -272,15 +309,16 @@ final class TripDetectionService: NSObject, ObservableObject {
     }
 
     private func appendRecent(_ point: CoordinatePoint) {
-        if let last = recentFixes.last, TripStartPolicy.meters(from: last, to: point) < 15 { return }
+        if let last = recentFixes.last, TripStartPolicy.meters(from: last, to: point) < 12 { return }
         recentFixes.append(point)
         if recentFixes.count > recentFixLimit {
             recentFixes.removeFirst(recentFixes.count - recentFixLimit)
         }
     }
 
-    private func finalizeTripIfNeeded() {
+    private func finalizeTripIfNeeded(reason: String) {
         guard isInMotionTrip, let start = tripStart ?? activePoints.first?.timestamp, !activePoints.isEmpty else {
+            clearActiveTripStore()
             resetTripState()
             return
         }
@@ -288,19 +326,16 @@ final class TripDetectionService: NSObject, ObservableObject {
         let meters = DistanceCalculator.pathLengthMeters(activePoints)
         if meters >= TripStartPolicy.minTripMeters {
             onTripCompleted?(start, end, activePoints, meters)
-            logger.info("Trip finalized \(meters, privacy: .public) m")
+            logger.info("Trip finalized \(meters, privacy: .public) m reason=\(reason, privacy: .public)")
         } else {
-            logger.info("Discarded short movement \(meters, privacy: .public) m")
+            logger.info("Discarded short movement \(meters, privacy: .public) m reason=\(reason, privacy: .public)")
         }
         if let last = activePoints.last {
-            rememberStationary(point: last)
+            rememberStationary(last)
         }
+        clearActiveTripStore()
         resetTripState()
         applyIdleAccuracy()
-    }
-
-    private func rememberStationary(point: CoordinatePoint) {
-        rememberStationary(point)
     }
 
     private func resetTripState() {
@@ -335,6 +370,41 @@ final class TripDetectionService: NSObject, ObservableObject {
         )
         lastKnownCoordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
     }
+
+    private func persistActiveTrip() {
+        guard isInMotionTrip, let start = tripStart ?? activePoints.first?.timestamp, !activePoints.isEmpty else {
+            clearActiveTripStore()
+            return
+        }
+        let snap = ActiveTripSnapshot(start: start, points: activePoints, lastMovementAt: lastMovementAt)
+        if let data = try? JSONEncoder().encode(snap) {
+            UserDefaults.standard.set(data, forKey: StoreKeys.activeTrip)
+        }
+    }
+
+    private func clearActiveTripStore() {
+        UserDefaults.standard.removeObject(forKey: StoreKeys.activeTrip)
+    }
+
+    private func restoreActiveTripIfNeeded() {
+        guard let data = UserDefaults.standard.data(forKey: StoreKeys.activeTrip),
+              let snap = try? JSONDecoder().decode(ActiveTripSnapshot.self, from: data),
+              !snap.points.isEmpty else { return }
+        // Drop ancient in-flight snapshots (e.g. leftover after a crash days ago).
+        let age = Date().timeIntervalSince(snap.points.last?.timestamp ?? snap.start)
+        guard age <= 6 * 60 * 60 else {
+            clearActiveTripStore()
+            return
+        }
+        isInMotionTrip = true
+        tripStart = snap.start
+        activePoints = snap.points
+        lastMovementAt = snap.lastMovementAt
+        if let last = snap.points.last {
+            lastKnownCoordinate = CLLocationCoordinate2D(latitude: last.latitude, longitude: last.longitude)
+        }
+        logger.info("Restored in-flight trip with \(snap.points.count, privacy: .public) points")
+    }
 }
 
 extension TripDetectionService: CLLocationManagerDelegate {
@@ -343,6 +413,11 @@ extension TripDetectionService: CLLocationManagerDelegate {
             self.authorizationStatus = manager.authorizationStatus
             if manager.authorizationStatus == .authorizedAlways {
                 manager.allowsBackgroundLocationUpdates = true
+                if self.isTracking {
+                    manager.startUpdatingLocation()
+                    manager.startMonitoringSignificantLocationChanges()
+                    manager.startMonitoringVisits()
+                }
             }
             AnalyticsStub.log("location_auth", ["status": "\(manager.authorizationStatus.rawValue)"])
         }
@@ -362,6 +437,8 @@ extension TripDetectionService: CLLocationManagerDelegate {
 
     nonisolated func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         Task { @MainActor in
+            // requestLocation() occasionally fails with temporary denials; don't spam UI.
+            if let cl = error as? CLError, cl.code == .locationUnknown { return }
             self.lastErrorMessage = error.localizedDescription
             self.logger.error("Location error: \(error.localizedDescription, privacy: .public)")
             CrashProtocolStub.record(error)

@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 import SwiftData
 
 struct SettingsView: View {
@@ -67,6 +68,22 @@ struct SettingsView: View {
                     LabeledContent("Permission", value: authLabel)
                     if tripDetection.isTracking {
                         Text("Tracking active").foregroundStyle(CalmilesColor.success)
+                    }
+                    if tripDetection.authorizationStatus == .notDetermined {
+                        // Pre-system prompt CTA: do not say Allow / Enable Location (App Review 5.1.1(iv)).
+                        Button("Continue") {
+                            tripDetection.requestWhenInUse()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                                tripDetection.requestAlways()
+                            }
+                        }
+                    } else if tripDetection.authorizationStatus == .denied
+                                || tripDetection.authorizationStatus == .restricted {
+                        Button("Open Settings") {
+                            if let url = URL(string: UIApplication.openSettingsURLString) {
+                                UIApplication.shared.open(url)
+                            }
+                        }
                     }
                     #if DEBUG
                     Button("Inject sample trip (DEBUG)") {
