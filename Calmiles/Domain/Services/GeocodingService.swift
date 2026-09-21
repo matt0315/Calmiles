@@ -314,14 +314,14 @@ enum GeocodingService {
     }
 
     static func isInAustralia(_ coordinate: CLLocationCoordinate2D) -> Bool {
-        region(australiaRegion, contains: coordinate)
+        regionContains(coordinate, in: australiaRegion)
     }
 
     static func contains(_ coordinate: CLLocationCoordinate2D, in region: MKCoordinateRegion) -> Bool {
-        region(region, contains: coordinate)
+        regionContains(coordinate, in: region)
     }
 
-    private static func region(_ region: MKCoordinateRegion, contains coordinate: CLLocationCoordinate2D) -> Bool {
+    private static func regionContains(_ coordinate: CLLocationCoordinate2D, in region: MKCoordinateRegion) -> Bool {
         let lat = abs(coordinate.latitude - region.center.latitude)
         let lon = abs(coordinate.longitude - region.center.longitude)
         return lat <= region.span.latitudeDelta / 2 && lon <= region.span.longitudeDelta / 2
