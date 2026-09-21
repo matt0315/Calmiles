@@ -1,0 +1,1023 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		047987D30BEF3BEE51BCC18C /* AddressSearchCompleter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C630C8377340C508C921827B /* AddressSearchCompleter.swift */; };
+		0BB5FD2C73905F0A8AB932ED /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB57707987C5976F7D7473D /* OnboardingView.swift */; };
+		0E7DD14A574370E9A9EF4900 /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A34CACC0C8E47FA0E26E83 /* SettingsStore.swift */; };
+		1670CC774601D900E95B6A75 /* TripEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3818C52CAB56524CB81F01A7 /* TripEditView.swift */; };
+		17A5F207FAC8C38C6ED89808 /* RateEstimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C741DEAC1B5A88304AD4697 /* RateEstimator.swift */; };
+		17F9801EC54074323F2F218E /* TripEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71BE370F2F5AEA39B01FD164 /* TripEntity.swift */; };
+		2613FE9A7A3457B4C53D5859 /* CoordinatePoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8566992ADB6BF8CF91A91925 /* CoordinatePoint.swift */; };
+		355DD4CD839B28A20474394B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4DB02E5015FA3BFC4B46265E /* Assets.xcassets */; };
+		379BDEB63B252914CB1DFB40 /* TripRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC966C0D7F8D7A3F156110A /* TripRowView.swift */; };
+		3A2FE54D7E7BF302E64DB8D4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 165527BDA0859A9EFA615F41 /* Preview Assets.xcassets */; };
+		45A4D765A62900486D176EF7 /* TripDetectionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A44A63508F6CC4EC5C7108 /* TripDetectionService.swift */; };
+		4CA1902AC31CB96F2990AB88 /* DistanceCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCC21CE34F45AF477D796FFF /* DistanceCalculator.swift */; };
+		4ECE303A8077FB31BCDF0F13 /* ClassificationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E830733651A912E314BDE68E /* ClassificationServiceTests.swift */; };
+		A31C9E0B7D2A4F1190C3E5B1 /* GeocodingServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21C9E0B7D2A4F1190C3E5B1 /* GeocodingServiceTests.swift */; };
+		4F71943A55BA727D1947213E /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04F24B5742D7F3F39F0CC5F /* Typography.swift */; };
+		54DF0358A2563786E6FD4C67 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CA27B568012A6820419FA4 /* PaywallView.swift */; };
+		599AE2AE8B68366D86FC6DA7 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3205F825963B8B6A45117201 /* SettingsView.swift */; };
+		5AA3D3663F3A96E2E3915E0B /* SubscriptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0F3671CE1382AEEA56657E /* SubscriptionManager.swift */; };
+		5D9044F6BB0944BF2D356644 /* BotlandStudioSplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C07BB883F81B26AF91584EA8 /* BotlandStudioSplashView.swift */; };
+		6582E3CCB095A64B6395DFEE /* ScreenshotUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959206240145F3B875F64907 /* ScreenshotUITests.swift */; };
+		6D2AFB7F8DDD423152E65FE9 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E2229E8124D9187689C639 /* Components.swift */; };
+		6ECC3E27E6E528F96EDF9303 /* AppIcon-mono.png in Resources */ = {isa = PBXBuildFile; fileRef = D72C00D967F0489B79C21CDA /* AppIcon-mono.png */; };
+		7AE597B69D5112BE33908E47 /* TripsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80669D832A1DB7277136166B /* TripsListView.swift */; };
+		7FF1FB080AEC00A794F2179A /* AppIcon-light.png in Resources */ = {isa = PBXBuildFile; fileRef = D9AFF1FC3BB375B4567879BB /* AppIcon-light.png */; };
+		8333491451D9C6D55C74A09B /* AppPreviewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316D8D3C474C5861BB8C5CCA /* AppPreviewUITests.swift */; };
+		8459C0F619D3F65E7C46A475 /* TripDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065A2BDE004E978117FC2BB1 /* TripDetailView.swift */; };
+		89F31A41B5083C0CBB153104 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ADD667F58E89FAA1C8CB95E /* HomeView.swift */; };
+		8B3E8703515F2748E99894EF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B31C4D98577AE42DBFBAA1DE /* Assets.xcassets */; };
+		929B19F4547CECA1962CB957 /* CalmilesWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 5905ED886A9EEDA11F97EBE3 /* CalmilesWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		959446C69D2E361369F5524F /* CalmilesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45DBBECD2EF28FF454B1DDFA /* CalmilesUITests.swift */; };
+		9624E6912A92E01536C68B68 /* TripStartPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99BC0AA82E3454568343B45C /* TripStartPolicy.swift */; };
+		9B4042898B6E87852431BC79 /* RateEstimatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E12F0409F1086C2CFB40880C /* RateEstimatorTests.swift */; };
+		A0E14BEBF9BA15C8D6E76046 /* WidgetSharedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD9592E4AE2AF0E5D30CD53 /* WidgetSharedStore.swift */; };
+		A2001475FC97F3C98266BF16 /* RatePreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDFC6B5A3C61FFD2CDAE3505 /* RatePreset.swift */; };
+		A6EA5EBDA8F2C3581DD22B8E /* ModelContainer+Calmiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 034F3B454FD1661218A4D48F /* ModelContainer+Calmiles.swift */; };
+		AA712632902166DD113C1A91 /* TripStartPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B642E2F987E83F350976007 /* TripStartPolicyTests.swift */; };
+		AEE41C1C5046ADAAEFA04C27 /* GeocodingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 965168D9E023319F0E3DC5AA /* GeocodingService.swift */; };
+		B8531C667C073493ABB4E435 /* ExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC35FEAF98E15A8BA6191F74 /* ExportView.swift */; };
+		BE9AE531A5E07D7B7DAB2872 /* RootTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A824BA67E3972592F8B71FA /* RootTabView.swift */; };
+		C3F3B84011D50E59CE7646A8 /* StudioURLs.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE0C6B4A82A73CCB37369367 /* StudioURLs.swift */; };
+		CD0B990439FAAE72866DA6BA /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867A60903C3B197C78D7B354 /* AppSettings.swift */; };
+		D0D246FF3A41A933B63EC276 /* CalmilesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6D75183B242C8792C69E640 /* CalmilesApp.swift */; };
+		D2444817BA318EBD606D807B /* CalmilesWeeklyWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D2C932AEA21142CA5453EE /* CalmilesWeeklyWidget.swift */; };
+		D36DFA4B5062E84F4AC7F96F /* AnalyticsStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 201543456647E1EE92EE9D17 /* AnalyticsStub.swift */; };
+		D40186E7910EF29BA20A0809 /* ExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2953795608DE35AC76BCCD /* ExportService.swift */; };
+		D4ADA1EEE0A2CEDBC07D006D /* DistanceCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B406CECF6A111364933B6EB2 /* DistanceCalculatorTests.swift */; };
+		D6E0AA825AC82CC23742F3C3 /* TripRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B843201C4FE96EC31ECE88A9 /* TripRepository.swift */; };
+		D777BC2DAA6512A265364B00 /* CalmilesWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4DF6F74404F592647AE4C8A /* CalmilesWidgetBundle.swift */; };
+		DB6F7CB1B2016E0A44200B82 /* FriendSharePromptStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67D16854F56D2F122B71757 /* FriendSharePromptStore.swift */; };
+		E3A3E9C36C50338805626A8D /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE24DCBEF6AFDA51D3995554 /* Colors.swift */; };
+		E95B31B326F7F5C407103539 /* CountryCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E568F467BF6A62A03D302E3 /* CountryCode.swift */; };
+		F59BD800FFE8BD5FEE29E587 /* TripClassification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D380B3963FEF19567468270 /* TripClassification.swift */; };
+		FF232486C7E9AE7523DCBADC /* ClassificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0C64AE763148F99B831980 /* ClassificationService.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		B4E1033E0C3208581E8D6802 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D65A6DFDD1A5BCE84330C40 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C9AA6A533F452F9F9584C01C;
+			remoteInfo = Calmiles;
+		};
+		BB80C1F9D7A2F7BC2C396E9B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D65A6DFDD1A5BCE84330C40 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C9AA6A533F452F9F9584C01C;
+			remoteInfo = Calmiles;
+		};
+		F451D891A0754009E37C556C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D65A6DFDD1A5BCE84330C40 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FC10297D23EA8D2BE8AEFA79;
+			remoteInfo = CalmilesWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1BFD906A44F458A0565933FE /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				929B19F4547CECA1962CB957 /* CalmilesWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		034F3B454FD1661218A4D48F /* ModelContainer+Calmiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModelContainer+Calmiles.swift"; sourceTree = "<group>"; };
+		065A2BDE004E978117FC2BB1 /* TripDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripDetailView.swift; sourceTree = "<group>"; };
+		06D2C932AEA21142CA5453EE /* CalmilesWeeklyWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalmilesWeeklyWidget.swift; sourceTree = "<group>"; };
+		0C741DEAC1B5A88304AD4697 /* RateEstimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateEstimator.swift; sourceTree = "<group>"; };
+		165527BDA0859A9EFA615F41 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		1A2953795608DE35AC76BCCD /* ExportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportService.swift; sourceTree = "<group>"; };
+		1ADD667F58E89FAA1C8CB95E /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		201543456647E1EE92EE9D17 /* AnalyticsStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsStub.swift; sourceTree = "<group>"; };
+		29272AA35ABEDCF24DCD4744 /* Calmiles.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Calmiles.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		316D8D3C474C5861BB8C5CCA /* AppPreviewUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPreviewUITests.swift; sourceTree = "<group>"; };
+		31A44A63508F6CC4EC5C7108 /* TripDetectionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripDetectionService.swift; sourceTree = "<group>"; };
+		3205F825963B8B6A45117201 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		32A34CACC0C8E47FA0E26E83 /* SettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStore.swift; sourceTree = "<group>"; };
+		3818C52CAB56524CB81F01A7 /* TripEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripEditView.swift; sourceTree = "<group>"; };
+		3DC966C0D7F8D7A3F156110A /* TripRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripRowView.swift; sourceTree = "<group>"; };
+		45DBBECD2EF28FF454B1DDFA /* CalmilesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalmilesUITests.swift; sourceTree = "<group>"; };
+		4C0C64AE763148F99B831980 /* ClassificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassificationService.swift; sourceTree = "<group>"; };
+		4D6651CECE5A2FC6F510E8ED /* CalmilesWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CalmilesWidget.entitlements; sourceTree = "<group>"; };
+		4DB02E5015FA3BFC4B46265E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5905ED886A9EEDA11F97EBE3 /* CalmilesWidgetExtension.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = CalmilesWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		5B642E2F987E83F350976007 /* TripStartPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripStartPolicyTests.swift; sourceTree = "<group>"; };
+		B21C9E0B7D2A4F1190C3E5B1 /* GeocodingServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeocodingServiceTests.swift; sourceTree = "<group>"; };
+		61F2AF10619CDEAB586D496B /* Calmiles.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Calmiles.entitlements; sourceTree = "<group>"; };
+		6A824BA67E3972592F8B71FA /* RootTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabView.swift; sourceTree = "<group>"; };
+		71BE370F2F5AEA39B01FD164 /* TripEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripEntity.swift; sourceTree = "<group>"; };
+		7A0F3671CE1382AEEA56657E /* SubscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionManager.swift; sourceTree = "<group>"; };
+		7D380B3963FEF19567468270 /* TripClassification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripClassification.swift; sourceTree = "<group>"; };
+		7DB3CA15F99BDBFE45B98695 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		7E568F467BF6A62A03D302E3 /* CountryCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryCode.swift; sourceTree = "<group>"; };
+		80669D832A1DB7277136166B /* TripsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripsListView.swift; sourceTree = "<group>"; };
+		83CA27B568012A6820419FA4 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
+		8566992ADB6BF8CF91A91925 /* CoordinatePoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatePoint.swift; sourceTree = "<group>"; };
+		867A60903C3B197C78D7B354 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		959206240145F3B875F64907 /* ScreenshotUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotUITests.swift; sourceTree = "<group>"; };
+		965168D9E023319F0E3DC5AA /* GeocodingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeocodingService.swift; sourceTree = "<group>"; };
+		99BC0AA82E3454568343B45C /* TripStartPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripStartPolicy.swift; sourceTree = "<group>"; };
+		A43E45155E25C58E82C13DB8 /* CalmilesUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CalmilesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B04F24B5742D7F3F39F0CC5F /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
+		B31C4D98577AE42DBFBAA1DE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B406CECF6A111364933B6EB2 /* DistanceCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceCalculatorTests.swift; sourceTree = "<group>"; };
+		B843201C4FE96EC31ECE88A9 /* TripRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripRepository.swift; sourceTree = "<group>"; };
+		BC35FEAF98E15A8BA6191F74 /* ExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportView.swift; sourceTree = "<group>"; };
+		BCD9592E4AE2AF0E5D30CD53 /* WidgetSharedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetSharedStore.swift; sourceTree = "<group>"; };
+		BE24DCBEF6AFDA51D3995554 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		C07BB883F81B26AF91584EA8 /* BotlandStudioSplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotlandStudioSplashView.swift; sourceTree = "<group>"; };
+		C630C8377340C508C921827B /* AddressSearchCompleter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSearchCompleter.swift; sourceTree = "<group>"; };
+		CCC21CE34F45AF477D796FFF /* DistanceCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceCalculator.swift; sourceTree = "<group>"; };
+		CDFC6B5A3C61FFD2CDAE3505 /* RatePreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatePreset.swift; sourceTree = "<group>"; };
+		D6D75183B242C8792C69E640 /* CalmilesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalmilesApp.swift; sourceTree = "<group>"; };
+		D72C00D967F0489B79C21CDA /* AppIcon-mono.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AppIcon-mono.png"; sourceTree = "<group>"; };
+		D81868DE23747E3881698967 /* CalmilesTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CalmilesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9AFF1FC3BB375B4567879BB /* AppIcon-light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AppIcon-light.png"; sourceTree = "<group>"; };
+		DDB57707987C5976F7D7473D /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		DE0C6B4A82A73CCB37369367 /* StudioURLs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudioURLs.swift; sourceTree = "<group>"; };
+		E12F0409F1086C2CFB40880C /* RateEstimatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateEstimatorTests.swift; sourceTree = "<group>"; };
+		E4AEB55B88896BB1AB567722 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		E4DF6F74404F592647AE4C8A /* CalmilesWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalmilesWidgetBundle.swift; sourceTree = "<group>"; };
+		E830733651A912E314BDE68E /* ClassificationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassificationServiceTests.swift; sourceTree = "<group>"; };
+		F4E2229E8124D9187689C639 /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
+		F67D16854F56D2F122B71757 /* FriendSharePromptStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendSharePromptStore.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		079CA60E8735B74223F34177 /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				201543456647E1EE92EE9D17 /* AnalyticsStub.swift */,
+			);
+			path = Analytics;
+			sourceTree = "<group>";
+		};
+		0B9B866E8812D86B218026F8 /* Calmiles */ = {
+			isa = PBXGroup;
+			children = (
+				3A15FA34AE1FA5761D1B196B /* App */,
+				913A1D63115A7CED7EDC9343 /* Data */,
+				8B0BF11A19D2E97FCECDF0CF /* DesignSystem */,
+				4CF4C8A074ABD74DCB4BACB6 /* Domain */,
+				1A4223D1B1CE5E9B53BF0964 /* Features */,
+				B80091411EABE6D1A95608E6 /* Preview Content */,
+				14B09CD6A4F8E1FBE9EC4980 /* Resources */,
+				4DB02E5015FA3BFC4B46265E /* Assets.xcassets */,
+				61F2AF10619CDEAB586D496B /* Calmiles.entitlements */,
+				7DB3CA15F99BDBFE45B98695 /* Info.plist */,
+			);
+			path = Calmiles;
+			sourceTree = "<group>";
+		};
+		14B09CD6A4F8E1FBE9EC4980 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				24F2AE1A048C1EB6342EF535 /* IconVariants */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		1A4223D1B1CE5E9B53BF0964 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				E64390DC4D472AB50741196D /* Export */,
+				70960897A0A7D21B0B14B7FA /* Home */,
+				38D55770331CE85EAEABF148 /* Onboarding */,
+				E36DAF396374DADAC7E14499 /* Paywall */,
+				F7E03E32718847E8D13FD6B4 /* Settings */,
+				F9853C463A4859DC8740F2C0 /* Studio */,
+				45823BDD3EA75D804165228D /* Trips */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		24F2AE1A048C1EB6342EF535 /* IconVariants */ = {
+			isa = PBXGroup;
+			children = (
+				D9AFF1FC3BB375B4567879BB /* AppIcon-light.png */,
+				D72C00D967F0489B79C21CDA /* AppIcon-mono.png */,
+			);
+			path = IconVariants;
+			sourceTree = "<group>";
+		};
+		312C7D7362FEBC517A868418 /* CalmilesWidget */ = {
+			isa = PBXGroup;
+			children = (
+				B31C4D98577AE42DBFBAA1DE /* Assets.xcassets */,
+				06D2C932AEA21142CA5453EE /* CalmilesWeeklyWidget.swift */,
+				4D6651CECE5A2FC6F510E8ED /* CalmilesWidget.entitlements */,
+				E4DF6F74404F592647AE4C8A /* CalmilesWidgetBundle.swift */,
+				E4AEB55B88896BB1AB567722 /* Info.plist */,
+			);
+			path = CalmilesWidget;
+			sourceTree = "<group>";
+		};
+		3244AB832F7B10FE74F58C68 /* CalmilesUITests */ = {
+			isa = PBXGroup;
+			children = (
+				316D8D3C474C5861BB8C5CCA /* AppPreviewUITests.swift */,
+				45DBBECD2EF28FF454B1DDFA /* CalmilesUITests.swift */,
+				959206240145F3B875F64907 /* ScreenshotUITests.swift */,
+			);
+			path = CalmilesUITests;
+			sourceTree = "<group>";
+		};
+		33F16A4D2F4C90B26FFAF24C = {
+			isa = PBXGroup;
+			children = (
+				0B9B866E8812D86B218026F8 /* Calmiles */,
+				61AFB21357EDAAA336D51CB2 /* CalmilesTests */,
+				3244AB832F7B10FE74F58C68 /* CalmilesUITests */,
+				312C7D7362FEBC517A868418 /* CalmilesWidget */,
+				BCCADE3ADAA370B98D9A775C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		38D55770331CE85EAEABF148 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				DDB57707987C5976F7D7473D /* OnboardingView.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		3A15FA34AE1FA5761D1B196B /* App */ = {
+			isa = PBXGroup;
+			children = (
+				D6D75183B242C8792C69E640 /* CalmilesApp.swift */,
+				6A824BA67E3972592F8B71FA /* RootTabView.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		45823BDD3EA75D804165228D /* Trips */ = {
+			isa = PBXGroup;
+			children = (
+				C630C8377340C508C921827B /* AddressSearchCompleter.swift */,
+				065A2BDE004E978117FC2BB1 /* TripDetailView.swift */,
+				3818C52CAB56524CB81F01A7 /* TripEditView.swift */,
+				3DC966C0D7F8D7A3F156110A /* TripRowView.swift */,
+				80669D832A1DB7277136166B /* TripsListView.swift */,
+			);
+			path = Trips;
+			sourceTree = "<group>";
+		};
+		4CF4C8A074ABD74DCB4BACB6 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				8E10056BA11323F274999DA3 /* Models */,
+				61D7AC69F8B1EFC0DC621038 /* Services */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		61AFB21357EDAAA336D51CB2 /* CalmilesTests */ = {
+			isa = PBXGroup;
+			children = (
+				E830733651A912E314BDE68E /* ClassificationServiceTests.swift */,
+				B406CECF6A111364933B6EB2 /* DistanceCalculatorTests.swift */,
+				B21C9E0B7D2A4F1190C3E5B1 /* GeocodingServiceTests.swift */,
+				E12F0409F1086C2CFB40880C /* RateEstimatorTests.swift */,
+				5B642E2F987E83F350976007 /* TripStartPolicyTests.swift */,
+			);
+			path = CalmilesTests;
+			sourceTree = "<group>";
+		};
+		61D7AC69F8B1EFC0DC621038 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				4C0C64AE763148F99B831980 /* ClassificationService.swift */,
+				CCC21CE34F45AF477D796FFF /* DistanceCalculator.swift */,
+				965168D9E023319F0E3DC5AA /* GeocodingService.swift */,
+				0C741DEAC1B5A88304AD4697 /* RateEstimator.swift */,
+				99BC0AA82E3454568343B45C /* TripStartPolicy.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		70960897A0A7D21B0B14B7FA /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				1ADD667F58E89FAA1C8CB95E /* HomeView.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		8B0BF11A19D2E97FCECDF0CF /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				BE24DCBEF6AFDA51D3995554 /* Colors.swift */,
+				F4E2229E8124D9187689C639 /* Components.swift */,
+				DE0C6B4A82A73CCB37369367 /* StudioURLs.swift */,
+				B04F24B5742D7F3F39F0CC5F /* Typography.swift */,
+			);
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		8E10056BA11323F274999DA3 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				867A60903C3B197C78D7B354 /* AppSettings.swift */,
+				8566992ADB6BF8CF91A91925 /* CoordinatePoint.swift */,
+				7E568F467BF6A62A03D302E3 /* CountryCode.swift */,
+				CDFC6B5A3C61FFD2CDAE3505 /* RatePreset.swift */,
+				7D380B3963FEF19567468270 /* TripClassification.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		913A1D63115A7CED7EDC9343 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				079CA60E8735B74223F34177 /* Analytics */,
+				FC85DF679FDF7C1A9221654E /* Export */,
+				93FABACC857B97372C7D9D03 /* Location */,
+				A090E58513ECA23B02589BC2 /* Persistence */,
+				F06935B17D9B22EEB920C1B6 /* Share */,
+				9E1DC26E67FCF2D2B1EC4B76 /* StoreKit */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		93FABACC857B97372C7D9D03 /* Location */ = {
+			isa = PBXGroup;
+			children = (
+				31A44A63508F6CC4EC5C7108 /* TripDetectionService.swift */,
+			);
+			path = Location;
+			sourceTree = "<group>";
+		};
+		9E1DC26E67FCF2D2B1EC4B76 /* StoreKit */ = {
+			isa = PBXGroup;
+			children = (
+				7A0F3671CE1382AEEA56657E /* SubscriptionManager.swift */,
+			);
+			path = StoreKit;
+			sourceTree = "<group>";
+		};
+		A090E58513ECA23B02589BC2 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				034F3B454FD1661218A4D48F /* ModelContainer+Calmiles.swift */,
+				32A34CACC0C8E47FA0E26E83 /* SettingsStore.swift */,
+				71BE370F2F5AEA39B01FD164 /* TripEntity.swift */,
+				B843201C4FE96EC31ECE88A9 /* TripRepository.swift */,
+				BCD9592E4AE2AF0E5D30CD53 /* WidgetSharedStore.swift */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
+		B80091411EABE6D1A95608E6 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				165527BDA0859A9EFA615F41 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		BCCADE3ADAA370B98D9A775C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				29272AA35ABEDCF24DCD4744 /* Calmiles.app */,
+				D81868DE23747E3881698967 /* CalmilesTests.xctest */,
+				A43E45155E25C58E82C13DB8 /* CalmilesUITests.xctest */,
+				5905ED886A9EEDA11F97EBE3 /* CalmilesWidgetExtension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E36DAF396374DADAC7E14499 /* Paywall */ = {
+			isa = PBXGroup;
+			children = (
+				83CA27B568012A6820419FA4 /* PaywallView.swift */,
+			);
+			path = Paywall;
+			sourceTree = "<group>";
+		};
+		E64390DC4D472AB50741196D /* Export */ = {
+			isa = PBXGroup;
+			children = (
+				BC35FEAF98E15A8BA6191F74 /* ExportView.swift */,
+			);
+			path = Export;
+			sourceTree = "<group>";
+		};
+		F06935B17D9B22EEB920C1B6 /* Share */ = {
+			isa = PBXGroup;
+			children = (
+				F67D16854F56D2F122B71757 /* FriendSharePromptStore.swift */,
+			);
+			path = Share;
+			sourceTree = "<group>";
+		};
+		F7E03E32718847E8D13FD6B4 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				3205F825963B8B6A45117201 /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		F9853C463A4859DC8740F2C0 /* Studio */ = {
+			isa = PBXGroup;
+			children = (
+				C07BB883F81B26AF91584EA8 /* BotlandStudioSplashView.swift */,
+			);
+			path = Studio;
+			sourceTree = "<group>";
+		};
+		FC85DF679FDF7C1A9221654E /* Export */ = {
+			isa = PBXGroup;
+			children = (
+				1A2953795608DE35AC76BCCD /* ExportService.swift */,
+			);
+			path = Export;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4A20E5C4D7FC33C3E635EE83 /* CalmilesTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 934D5477697397FF81A2485D /* Build configuration list for PBXNativeTarget "CalmilesTests" */;
+			buildPhases = (
+				A72B885DF9F047C30519AD7E /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5D86385CB642B8AAFAAA13D3 /* PBXTargetDependency */,
+			);
+			name = CalmilesTests;
+			packageProductDependencies = (
+			);
+			productName = CalmilesTests;
+			productReference = D81868DE23747E3881698967 /* CalmilesTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		8A147911D69B4439EBACA9C4 /* CalmilesUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 027A201A25394FA5B980A8FF /* Build configuration list for PBXNativeTarget "CalmilesUITests" */;
+			buildPhases = (
+				4B69619F39E866F893E0A3C2 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				03FC2B8D478420C00861363E /* PBXTargetDependency */,
+			);
+			name = CalmilesUITests;
+			packageProductDependencies = (
+			);
+			productName = CalmilesUITests;
+			productReference = A43E45155E25C58E82C13DB8 /* CalmilesUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		C9AA6A533F452F9F9584C01C /* Calmiles */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BB3EBB87F4D41AA4DC6FDC04 /* Build configuration list for PBXNativeTarget "Calmiles" */;
+			buildPhases = (
+				37436D42AA8BB21D7D97EF23 /* Sources */,
+				F1C9EC0F91FEDA5AF50F3FEF /* Resources */,
+				1BFD906A44F458A0565933FE /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				86664666E0C65F727E78EF5A /* PBXTargetDependency */,
+			);
+			name = Calmiles;
+			packageProductDependencies = (
+			);
+			productName = Calmiles;
+			productReference = 29272AA35ABEDCF24DCD4744 /* Calmiles.app */;
+			productType = "com.apple.product-type.application";
+		};
+		FC10297D23EA8D2BE8AEFA79 /* CalmilesWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8529EB958B9C73465E06E466 /* Build configuration list for PBXNativeTarget "CalmilesWidgetExtension" */;
+			buildPhases = (
+				7760F2ED5BC2420C77337787 /* Sources */,
+				CE568F3967B9E149C578723B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CalmilesWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = CalmilesWidgetExtension;
+			productReference = 5905ED886A9EEDA11F97EBE3 /* CalmilesWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		9D65A6DFDD1A5BCE84330C40 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					4A20E5C4D7FC33C3E635EE83 = {
+						DevelopmentTeam = 8KV5SRG3UC;
+						ProvisioningStyle = Automatic;
+					};
+					8A147911D69B4439EBACA9C4 = {
+						DevelopmentTeam = 8KV5SRG3UC;
+						ProvisioningStyle = Automatic;
+						TestTargetID = C9AA6A533F452F9F9584C01C;
+					};
+					C9AA6A533F452F9F9584C01C = {
+						DevelopmentTeam = 8KV5SRG3UC;
+						ProvisioningStyle = Automatic;
+					};
+					FC10297D23EA8D2BE8AEFA79 = {
+						DevelopmentTeam = 8KV5SRG3UC;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = EB7E7A44C06A32E471AAEAB0 /* Build configuration list for PBXProject "Calmiles" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 33F16A4D2F4C90B26FFAF24C;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = BCCADE3ADAA370B98D9A775C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C9AA6A533F452F9F9584C01C /* Calmiles */,
+				FC10297D23EA8D2BE8AEFA79 /* CalmilesWidgetExtension */,
+				4A20E5C4D7FC33C3E635EE83 /* CalmilesTests */,
+				8A147911D69B4439EBACA9C4 /* CalmilesUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		CE568F3967B9E149C578723B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8B3E8703515F2748E99894EF /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1C9EC0F91FEDA5AF50F3FEF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7FF1FB080AEC00A794F2179A /* AppIcon-light.png in Resources */,
+				6ECC3E27E6E528F96EDF9303 /* AppIcon-mono.png in Resources */,
+				355DD4CD839B28A20474394B /* Assets.xcassets in Resources */,
+				3A2FE54D7E7BF302E64DB8D4 /* Preview Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		37436D42AA8BB21D7D97EF23 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				047987D30BEF3BEE51BCC18C /* AddressSearchCompleter.swift in Sources */,
+				D36DFA4B5062E84F4AC7F96F /* AnalyticsStub.swift in Sources */,
+				CD0B990439FAAE72866DA6BA /* AppSettings.swift in Sources */,
+				5D9044F6BB0944BF2D356644 /* BotlandStudioSplashView.swift in Sources */,
+				D0D246FF3A41A933B63EC276 /* CalmilesApp.swift in Sources */,
+				FF232486C7E9AE7523DCBADC /* ClassificationService.swift in Sources */,
+				E3A3E9C36C50338805626A8D /* Colors.swift in Sources */,
+				6D2AFB7F8DDD423152E65FE9 /* Components.swift in Sources */,
+				2613FE9A7A3457B4C53D5859 /* CoordinatePoint.swift in Sources */,
+				E95B31B326F7F5C407103539 /* CountryCode.swift in Sources */,
+				4CA1902AC31CB96F2990AB88 /* DistanceCalculator.swift in Sources */,
+				D40186E7910EF29BA20A0809 /* ExportService.swift in Sources */,
+				B8531C667C073493ABB4E435 /* ExportView.swift in Sources */,
+				DB6F7CB1B2016E0A44200B82 /* FriendSharePromptStore.swift in Sources */,
+				AEE41C1C5046ADAAEFA04C27 /* GeocodingService.swift in Sources */,
+				89F31A41B5083C0CBB153104 /* HomeView.swift in Sources */,
+				A6EA5EBDA8F2C3581DD22B8E /* ModelContainer+Calmiles.swift in Sources */,
+				0BB5FD2C73905F0A8AB932ED /* OnboardingView.swift in Sources */,
+				54DF0358A2563786E6FD4C67 /* PaywallView.swift in Sources */,
+				17A5F207FAC8C38C6ED89808 /* RateEstimator.swift in Sources */,
+				A2001475FC97F3C98266BF16 /* RatePreset.swift in Sources */,
+				BE9AE531A5E07D7B7DAB2872 /* RootTabView.swift in Sources */,
+				0E7DD14A574370E9A9EF4900 /* SettingsStore.swift in Sources */,
+				599AE2AE8B68366D86FC6DA7 /* SettingsView.swift in Sources */,
+				C3F3B84011D50E59CE7646A8 /* StudioURLs.swift in Sources */,
+				5AA3D3663F3A96E2E3915E0B /* SubscriptionManager.swift in Sources */,
+				F59BD800FFE8BD5FEE29E587 /* TripClassification.swift in Sources */,
+				8459C0F619D3F65E7C46A475 /* TripDetailView.swift in Sources */,
+				45A4D765A62900486D176EF7 /* TripDetectionService.swift in Sources */,
+				1670CC774601D900E95B6A75 /* TripEditView.swift in Sources */,
+				17F9801EC54074323F2F218E /* TripEntity.swift in Sources */,
+				D6E0AA825AC82CC23742F3C3 /* TripRepository.swift in Sources */,
+				379BDEB63B252914CB1DFB40 /* TripRowView.swift in Sources */,
+				9624E6912A92E01536C68B68 /* TripStartPolicy.swift in Sources */,
+				7AE597B69D5112BE33908E47 /* TripsListView.swift in Sources */,
+				4F71943A55BA727D1947213E /* Typography.swift in Sources */,
+				A0E14BEBF9BA15C8D6E76046 /* WidgetSharedStore.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B69619F39E866F893E0A3C2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8333491451D9C6D55C74A09B /* AppPreviewUITests.swift in Sources */,
+				959446C69D2E361369F5524F /* CalmilesUITests.swift in Sources */,
+				6582E3CCB095A64B6395DFEE /* ScreenshotUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7760F2ED5BC2420C77337787 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D2444817BA318EBD606D807B /* CalmilesWeeklyWidget.swift in Sources */,
+				D777BC2DAA6512A265364B00 /* CalmilesWidgetBundle.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A72B885DF9F047C30519AD7E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4ECE303A8077FB31BCDF0F13 /* ClassificationServiceTests.swift in Sources */,
+				D4ADA1EEE0A2CEDBC07D006D /* DistanceCalculatorTests.swift in Sources */,
+				A31C9E0B7D2A4F1190C3E5B1 /* GeocodingServiceTests.swift in Sources */,
+				9B4042898B6E87852431BC79 /* RateEstimatorTests.swift in Sources */,
+				AA712632902166DD113C1A91 /* TripStartPolicyTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		03FC2B8D478420C00861363E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C9AA6A533F452F9F9584C01C /* Calmiles */;
+			targetProxy = B4E1033E0C3208581E8D6802 /* PBXContainerItemProxy */;
+		};
+		5D86385CB642B8AAFAAA13D3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C9AA6A533F452F9F9584C01C /* Calmiles */;
+			targetProxy = BB80C1F9D7A2F7BC2C396E9B /* PBXContainerItemProxy */;
+		};
+		86664666E0C65F727E78EF5A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FC10297D23EA8D2BE8AEFA79 /* CalmilesWidgetExtension */;
+			targetProxy = F451D891A0754009E37C556C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0FC0BEBE3E6D1DA45BED73BA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = CalmilesWidget/CalmilesWidget.entitlements;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = CalmilesWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = studio.botland.calmiles.widget;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1305993DC7C177217788BBA9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 7;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 8KV5SRG3UC;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.10;
+			};
+			name = Debug;
+		};
+		2DB6EEAF8A5524016DAFB60D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = studio.botland.calmiles.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Calmiles.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Calmiles";
+			};
+			name = Release;
+		};
+		3662BF3D0A85C2E176C30714 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = studio.botland.calmiles.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Calmiles.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Calmiles";
+			};
+			name = Debug;
+		};
+		55143B7515830993A74D5300 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = CalmilesWidget/CalmilesWidget.entitlements;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = CalmilesWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = studio.botland.calmiles.widget;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		63665EFE9BFFF01B5EDC8C1A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Calmiles/Calmiles.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Calmiles/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = studio.botland.calmiles;
+				SDKROOT = iphoneos;
+				SUPPORTS_XR_DESIGNED_FOR_IPAD_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		69293C8AB0BEBDC8D882905B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = studio.botland.calmiles.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Calmiles;
+			};
+			name = Release;
+		};
+		A57F9080638926CDF5662A1B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Calmiles/Calmiles.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Calmiles/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = studio.botland.calmiles;
+				SDKROOT = iphoneos;
+				SUPPORTS_XR_DESIGNED_FOR_IPAD_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		D31B15C077E29E2B5B9184EF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 7;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 8KV5SRG3UC;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.10;
+			};
+			name = Release;
+		};
+		DE093DC9E0B9BB8A11F861D6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = studio.botland.calmiles.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Calmiles;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		027A201A25394FA5B980A8FF /* Build configuration list for PBXNativeTarget "CalmilesUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DE093DC9E0B9BB8A11F861D6 /* Debug */,
+				69293C8AB0BEBDC8D882905B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		8529EB958B9C73465E06E466 /* Build configuration list for PBXNativeTarget "CalmilesWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0FC0BEBE3E6D1DA45BED73BA /* Debug */,
+				55143B7515830993A74D5300 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		934D5477697397FF81A2485D /* Build configuration list for PBXNativeTarget "CalmilesTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3662BF3D0A85C2E176C30714 /* Debug */,
+				2DB6EEAF8A5524016DAFB60D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		BB3EBB87F4D41AA4DC6FDC04 /* Build configuration list for PBXNativeTarget "Calmiles" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				63665EFE9BFFF01B5EDC8C1A /* Debug */,
+				A57F9080638926CDF5662A1B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		EB7E7A44C06A32E471AAEAB0 /* Build configuration list for PBXProject "Calmiles" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1305993DC7C177217788BBA9 /* Debug */,
+				D31B15C077E29E2B5B9184EF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 9D65A6DFDD1A5BCE84330C40 /* Project object */;
+}
