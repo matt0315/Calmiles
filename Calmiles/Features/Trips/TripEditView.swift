@@ -226,14 +226,13 @@ struct TripEditView: View {
         place: GeocodingService.ResolvedPlace?
     ) -> some View {
         TextField(title, text: text)
-            .textContentType(.fullStreetAddress)
             .textInputAutocapitalization(.words)
             .autocorrectionDisabled()
             .focused($focusedAddress, equals: field)
             .submitLabel(.next)
             .onSubmit { scheduleRouteCalculation(immediate: true) }
             .accessibilityLabel(title)
-            .accessibilityHint(place == nil ? "Type an address. Suggestions appear as you type." : "Address selected")
+            .accessibilityHint(place == nil ? "Type an address or place name. Suggestions appear as you type." : "Place selected")
     }
 
     @ViewBuilder

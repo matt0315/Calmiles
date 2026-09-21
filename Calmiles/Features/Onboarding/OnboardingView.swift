@@ -61,9 +61,7 @@ struct OnboardingView: View {
             Spacer()
             CalmilesPrimaryButton(title: "Continue") {
                 tripDetection.requestWhenInUse()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                    tripDetection.requestAlways()
-                }
+                tripDetection.start()
                 withAnimation { page = 2 }
             }
             .padding(.horizontal, 24)

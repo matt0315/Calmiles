@@ -7,6 +7,7 @@ struct CalmilesApp: App {
     @StateObject private var subscriptions = SubscriptionManager.shared
     @StateObject private var tripDetection = TripDetectionService.shared
     @StateObject private var friendShare = FriendSharePromptStore.shared
+    @Environment(\.scenePhase) private var scenePhase
 
     @State private var showSplash: Bool = Self.shouldShowSplashOnLaunch
     @State private var showSharePrompt = false
@@ -69,6 +70,12 @@ struct CalmilesApp: App {
                 .environmentObject(friendShare)
                 .modelContainer(container)
                 .preferredColorScheme(nil)
+                .onChange(of: scenePhase) { _, phase in
+                    guard phase == .active else { return }
+                    if settings.settings.hasCompletedOnboarding, settings.settings.autoDetectEnabled {
+                        tripDetection.start()
+                    }
+                }
                 .task {
                     await subscriptions.refreshEntitlements()
                     wireTripDetection()

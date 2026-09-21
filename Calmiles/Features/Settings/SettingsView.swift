@@ -73,8 +73,8 @@ struct SettingsView: View {
                         // Pre-system prompt CTA: do not say Allow / Enable Location (App Review 5.1.1(iv)).
                         Button("Continue") {
                             tripDetection.requestWhenInUse()
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                                tripDetection.requestAlways()
+                            if settings.settings.autoDetectEnabled {
+                                tripDetection.start()
                             }
                         }
                     } else if tripDetection.authorizationStatus == .denied

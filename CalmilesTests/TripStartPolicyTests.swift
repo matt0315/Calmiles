@@ -76,9 +76,61 @@ final class TripStartPolicyTests: XCTestCase {
         XCTAssertFalse(stillThere)
     }
 
+    func testDepartureAcceptsShortNeighborhoodLeave() {
+        let start = Date()
+        let anchor = TripStartPolicy.Anchor(
+            latitude: -31.95,
+            longitude: 115.86,
+            timestamp: start,
+            horizontalAccuracy: 20
+        )
+        // ~70 m north, no valid speed — should still count as leaving.
+        let left = TripStartPolicy.hasDeparted(
+            anchor: anchor,
+            latitude: -31.94937,
+            longitude: 115.86,
+            speed: -1,
+            timestamp: start.addingTimeInterval(25)
+        )
+        XCTAssertTrue(left)
+    }
+
+    func testStaleCachedSampleIsNotADeparture() {
+        let parked = Date()
+        let anchor = TripStartPolicy.Anchor(
+            latitude: -31.95,
+            longitude: 115.86,
+            timestamp: parked,
+            horizontalAccuracy: 20
+        )
+        let cached = TripStartPolicy.hasDeparted(
+            anchor: anchor,
+            latitude: -31.94,
+            longitude: 115.86,
+            speed: -1,
+            timestamp: parked.addingTimeInterval(-300)
+        )
+        XCTAssertFalse(cached)
+        XCTAssertFalse(TripStartPolicy.isFreshSample(timestamp: parked.addingTimeInterval(-400)))
+        XCTAssertTrue(TripStartPolicy.isFreshSample(timestamp: parked.addingTimeInterval(-10)))
+    }
+
+    func testMotionIndicatesDriveStartsWithoutDistance() {
+        let start = Date()
+        let stillThere = TripStartPolicy.hasDeparted(
+            anchor: .init(latitude: -31.95, longitude: 115.86, timestamp: start, horizontalAccuracy: 20),
+            latitude: -31.95,
+            longitude: 115.86,
+            speed: -1,
+            timestamp: start.addingTimeInterval(5),
+            motionIndicatesDrive: true
+        )
+        XCTAssertTrue(stillThere)
+    }
+
     func testDwellEndsAwayFromOriginPark() {
         let t0 = Date(timeIntervalSince1970: 1_700_000_000)
-        // Drive ~5 km north, then sit still at the destination for 3+ minutes.
+        // Drive ~5 km north, then sit still at the destination for a few minutes.
         var points: [CoordinatePoint] = [
             .init(latitude: -31.95, longitude: 115.86, timestamp: t0, speed: 0),
             .init(latitude: -31.92, longitude: 115.86, timestamp: t0.addingTimeInterval(600), speed: 12),
@@ -117,6 +169,24 @@ final class TripStartPolicyTests: XCTestCase {
         XCTAssertFalse(
             TripStartPolicy.isStationaryDwell(points: points, now: points.last!.timestamp),
             "Moving samples must not look like a dwell"
+        )
+    }
+
+    func testSparseParkEndsViaLastMovementTimeout() {
+        let t0 = Date(timeIntervalSince1970: 1_700_000_000)
+        let points: [CoordinatePoint] = [
+            .init(latitude: -31.95, longitude: 115.86, timestamp: t0, speed: 12),
+            .init(latitude: -31.90, longitude: 115.86, timestamp: t0.addingTimeInterval(600), speed: 10),
+            .init(latitude: -31.90, longitude: 115.8601, timestamp: t0.addingTimeInterval(610), speed: 0)
+        ]
+        let lastMove = t0.addingTimeInterval(610)
+        XCTAssertFalse(
+            TripStartPolicy.shouldFinalizeTrip(points: points, lastMovementAt: lastMove, now: lastMove.addingTimeInterval(60)),
+            "A one-minute pause mid-errand must not end the trip"
+        )
+        XCTAssertTrue(
+            TripStartPolicy.shouldFinalizeTrip(points: points, lastMovementAt: lastMove, now: lastMove.addingTimeInterval(160)),
+            "Sparse GPS after parking must still end the trip via last-movement timeout"
         )
     }
 }

@@ -26,13 +26,17 @@ enum GeocodingService {
         }
     }
 
+    /// Address + POI so stadiums, shops, and named venues resolve — not streets only.
+    static let placeSearchResultTypes: MKLocalSearch.ResultType = [.address, .pointOfInterest]
+
     /// Perth metro — default bias when the user is in WA or we have no better fix.
     static let perthCenter = CLLocationCoordinate2D(latitude: -31.9523, longitude: 115.8613)
 
+    /// ~450 km from Perth: covers the South West (Pemberton, Albany) while still ranking local results first.
     static let perthRegion = MKCoordinateRegion(
         center: perthCenter,
-        latitudinalMeters: 70_000,
-        longitudinalMeters: 70_000
+        latitudinalMeters: 900_000,
+        longitudinalMeters: 900_000
     )
 
     /// Rough Australia box used to reject overseas geocodes of local-looking queries.
@@ -48,8 +52,8 @@ enum GeocodingService {
         }
         return MKCoordinateRegion(
             center: coordinate,
-            latitudinalMeters: 80_000,
-            longitudinalMeters: 80_000
+            latitudinalMeters: 900_000,
+            longitudinalMeters: 900_000
         )
     }
 
@@ -65,7 +69,9 @@ enum GeocodingService {
         guard !trimmed.isEmpty else { throw GeocodeError.emptyAddress }
 
         let primary = searchRegion(near: hint)
-        if let place = await searchPlace(trimmed, region: primary, requireIn: primary) {
+        // Don't requireIn the bias region: localities like Pemberton sit outside a tight Perth box.
+        if let place = await searchPlace(trimmed, region: primary, requireIn: nil),
+           isInAustralia(place.coordinate) {
             return place
         }
         if let place = await searchPlace(trimmed, region: australiaRegion, requireIn: australiaRegion) {
@@ -85,8 +91,12 @@ enum GeocodingService {
     static func resolve(completion: MKLocalSearchCompletion, near hint: CLLocationCoordinate2D? = nil) async throws -> ResolvedPlace {
         let request = MKLocalSearch.Request(completion: completion)
         request.region = searchRegion(near: hint)
-        request.resultTypes = .address
-        if let place = await firstPlace(from: request, requireIn: nil) {
+        // The completion already carries its type. Forcing .address drops stadiums / POIs.
+        if var place = await firstPlace(from: request, requireIn: nil) {
+            let suggestion = displayString(title: completion.title, subtitle: completion.subtitle)
+            if !suggestion.isEmpty {
+                place.display = suggestion
+            }
             return place
         }
         let query = displayString(title: completion.title, subtitle: completion.subtitle)
@@ -206,11 +216,22 @@ enum GeocodingService {
         region: MKCoordinateRegion,
         requireIn: MKCoordinateRegion?
     ) async -> ResolvedPlace? {
-        let request = MKLocalSearch.Request()
-        request.naturalLanguageQuery = query
-        request.region = region
-        request.resultTypes = .address
-        return await firstPlace(from: request, requireIn: requireIn)
+        let attempts: [MKLocalSearch.ResultType?] = [
+            placeSearchResultTypes,
+            nil
+        ]
+        for types in attempts {
+            let request = MKLocalSearch.Request()
+            request.naturalLanguageQuery = query
+            request.region = region
+            if let types {
+                request.resultTypes = types
+            }
+            if let place = await firstPlace(from: request, requireIn: requireIn) {
+                return place
+            }
+        }
+        return nil
     }
 
     private static func firstPlace(
@@ -237,22 +258,31 @@ enum GeocodingService {
     private static func place(from item: MKMapItem, fallbackQuery: String) -> ResolvedPlace {
         let coord = item.placemark.coordinate
         let name = item.name?.trimmingCharacters(in: .whitespacesAndNewlines)
-        let formatted = [
+        let locality = item.placemark.locality?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let area = item.placemark.administrativeArea?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let streetParts = [
             item.placemark.subThoroughfare,
-            item.placemark.thoroughfare,
-            item.placemark.locality,
-            item.placemark.administrativeArea,
-            item.placemark.postalCode
+            item.placemark.thoroughfare
         ]
         .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
         .filter { !$0.isEmpty }
-        .joined(separator: ", ")
 
         let display: String
-        if !formatted.isEmpty {
-            display = formatted
-        } else if let name, !name.isEmpty {
-            display = name
+        if let name, !name.isEmpty {
+            // Prefer venue / locality names (Optus Stadium, Pemberton) over street-only formatting.
+            var parts = [name]
+            if let locality, !name.localizedCaseInsensitiveContains(locality) {
+                parts.append(locality)
+            }
+            if let area, !parts.joined(separator: " ").localizedCaseInsensitiveContains(area) {
+                parts.append(area)
+            }
+            display = parts.joined(separator: ", ")
+        } else if !streetParts.isEmpty {
+            var parts = streetParts
+            if let locality { parts.append(locality) }
+            if let area { parts.append(area) }
+            display = parts.joined(separator: ", ")
         } else {
             display = fallbackQuery
         }
@@ -285,6 +315,10 @@ enum GeocodingService {
 
     static func isInAustralia(_ coordinate: CLLocationCoordinate2D) -> Bool {
         region(australiaRegion, contains: coordinate)
+    }
+
+    static func contains(_ coordinate: CLLocationCoordinate2D, in region: MKCoordinateRegion) -> Bool {
+        region(region, contains: coordinate)
     }
 
     private static func region(_ region: MKCoordinateRegion, contains coordinate: CLLocationCoordinate2D) -> Bool {

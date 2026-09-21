@@ -13,7 +13,8 @@ final class AddressSearchCompleter: NSObject, ObservableObject, MKLocalSearchCom
     override init() {
         super.init()
         completer.delegate = self
-        completer.resultTypes = [.address]
+        completer.resultTypes = [.address, .pointOfInterest]
+        completer.pointOfInterestFilter = .includingAll
         completer.region = GeocodingService.perthRegion
     }
 
@@ -39,7 +40,7 @@ final class AddressSearchCompleter: NSObject, ObservableObject, MKLocalSearchCom
     }
 
     nonisolated func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        let results = Array(completer.results.prefix(6))
+        let results = Array(completer.results.prefix(8))
         Task { @MainActor in
             self.suggestions = results
         }

@@ -19,16 +19,18 @@ enum TripStartPolicy {
     static let maxImpliedSpeed: Double = 42 // m/s ~ 150 km/h
     /// Movement from the last park that counts as leaving, even if speed is invalid.
     /// Prefer capturing early over waiting for a long GPS gap.
-    static let departureDistanceMeters: Double = 100
+    static let departureDistanceMeters: Double = 55
     /// Speed that counts as driving when the device reports it.
-    static let movingSpeedThreshold: Double = 1.8 // m/s ~ 6.5 km/h
+    static let movingSpeedThreshold: Double = 1.5 // m/s ~ 5.4 km/h
     /// While recording, treat this as still moving (keeps dwell timer from firing).
-    static let keepAliveSpeedThreshold: Double = 1.2 // m/s ~ 4.3 km/h
+    static let keepAliveSpeedThreshold: Double = 1.0 // m/s ~ 3.6 km/h
     /// Cluster radius used to decide "parked at destination".
-    static let dwellRadiusMeters: Double = 80
+    static let dwellRadiusMeters: Double = 90
     /// How long the device must stay in the dwell cluster before ending a trip.
-    static let dwellTimeout: TimeInterval = 180
-    static let minTripMeters: Double = 250
+    static let dwellTimeout: TimeInterval = 150
+    static let minTripMeters: Double = 120
+    /// Cached / deferred samples older than this are not used to start a trip.
+    static let maxSampleAge: TimeInterval = 180
 
     static func meters(from a: Anchor, to latitude: Double, longitude: Double) -> Double {
         DistanceCalculator.haversineMeters(
@@ -55,15 +57,31 @@ enum TripStartPolicy {
         speed >= movingSpeedThreshold
     }
 
+    /// Drop ancient cached fixes so a stale sample cannot look like an instant jump.
+    static func isFreshSample(timestamp: Date, now: Date = Date(), maxAge: TimeInterval = maxSampleAge) -> Bool {
+        let age = now.timeIntervalSince(timestamp)
+        return age >= -5 && age <= maxAge
+    }
+
     /// Left the last parked point: valid driving speed, or far enough that a missed
     /// speed reading still counts (GPS speed is often -1 on the first wake).
-    static func hasDeparted(anchor: Anchor?, latitude: Double, longitude: Double, speed: Double, timestamp: Date) -> Bool {
+    static func hasDeparted(
+        anchor: Anchor?,
+        latitude: Double,
+        longitude: Double,
+        speed: Double,
+        timestamp: Date,
+        motionIndicatesDrive: Bool = false
+    ) -> Bool {
+        if motionIndicatesDrive { return true }
         if isMoving(speed: speed) { return true }
         guard let anchor else { return false }
+        let dt = timestamp.timeIntervalSince(anchor.timestamp)
+        // Stale cached sample from before we parked is not a departure.
+        if dt < -2 { return false }
         let distance = meters(from: anchor, to: latitude, longitude: longitude)
         guard distance >= departureDistanceMeters else { return false }
-        let dt = timestamp.timeIntervalSince(anchor.timestamp)
-        if dt <= 1 { return distance >= departureDistanceMeters }
+        if dt <= 1 { return true }
         let implied = distance / dt
         return implied <= maxImpliedSpeed
     }
@@ -76,7 +94,7 @@ enum TripStartPolicy {
         guard dt > 0 else { return false }
         let distance = meters(from: previous, to: current)
         // ~1 m/s average between samples keeps a trip alive through brief GPS gaps.
-        if distance / dt >= 1.0 && distance >= 25 { return true }
+        if distance / dt >= 0.8 && distance >= 20 { return true }
         return false
     }
 
@@ -104,6 +122,22 @@ enum TripStartPolicy {
         return true
     }
 
+    /// End when clustered dwell is satisfied, or when nothing has moved for the dwell window.
+    /// Sparse significant-change samples often never fill a 3-minute cluster, so a
+    /// last-movement timeout is required to actually finish trips after parking.
+    static func shouldFinalizeTrip(
+        points: [CoordinatePoint],
+        lastMovementAt: Date?,
+        now: Date = Date(),
+        timeout: TimeInterval = dwellTimeout
+    ) -> Bool {
+        if isStationaryDwell(points: points, now: now, timeout: timeout) { return true }
+        if let lastMovementAt, now.timeIntervalSince(lastMovementAt) >= timeout {
+            return true
+        }
+        return false
+    }
+
     /// If detection woke up after the car had already left, prepend the last park
     /// when it is recent and the implied speed is a plausible drive.
     static func backfillStart(anchor: Anchor?, firstMoving: CoordinatePoint) -> CoordinatePoint? {
@@ -119,7 +153,7 @@ enum TripStartPolicy {
         )
         let distance = meters(from: start, to: firstMoving)
         // Already essentially the same place.
-        guard distance >= 35 else { return nil }
+        guard distance >= 25 else { return nil }
         if age < 1 { return start }
         let implied = distance / age
         guard implied <= maxImpliedSpeed else { return nil }

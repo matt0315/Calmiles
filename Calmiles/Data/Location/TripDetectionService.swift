@@ -1,17 +1,26 @@
 import Foundation
 import CoreLocation
+import CoreMotion
+import UIKit
 import os.log
 
-/// Background trip auto-detect via Core Location visits, significant-change, and
-/// standard updates. Starts from the last parked point when a wake-up is late,
-/// ends on destination dwell (not “back near home”), and persists an in-flight
-/// trip across process death. Honest battery disclosure is in Info.plist / onboarding.
+/// Background trip auto-detect via Core Location visits, significant-change,
+/// standard updates, and (when available) automotive motion. Starts from the last
+/// parked point when a wake-up is late, ends on destination dwell, and persists
+/// an in-flight trip across process death.
 @MainActor
 final class TripDetectionService: NSObject, ObservableObject {
     static let shared = TripDetectionService()
 
     private let logger = Logger(subsystem: "studio.botland.calmiles", category: "TripDetection")
     private let locationManager = CLLocationManager()
+    private let motionManager = CMMotionActivityManager()
+    private let motionQueue: OperationQueue = {
+        let queue = OperationQueue()
+        queue.name = "studio.botland.calmiles.motion"
+        queue.maxConcurrentOperationCount = 1
+        return queue
+    }()
 
     @Published private(set) var authorizationStatus: CLAuthorizationStatus
     @Published private(set) var isTracking = false
@@ -31,6 +40,12 @@ final class TripDetectionService: NSObject, ObservableObject {
     /// Recent fixes while still parked, so a late "moving" sample can include the departure.
     private var recentFixes: [CoordinatePoint] = []
     private let recentFixLimit = 16
+    /// True after `start()` until `stop()`. Survives a failed first start when auth is pending.
+    private var wantsTracking = false
+    /// Core Motion says the device is in a vehicle (permission is requested on first use).
+    private var motionIndicatesDrive = false
+    private var motionUpdatesRunning = false
+    private var becomeActiveObserver: NSObjectProtocol?
 
     private enum StoreKeys {
         static let lat = "calmiles.detect.lastLat"
@@ -46,18 +61,31 @@ final class TripDetectionService: NSObject, ObservableObject {
         var lastMovementAt: Date?
     }
 
+    private var isAuthorized: Bool {
+        authorizationStatus == .authorizedAlways || authorizationStatus == .authorizedWhenInUse
+    }
+
     override init() {
         authorizationStatus = locationManager.authorizationStatus
         super.init()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
-        locationManager.distanceFilter = 40
+        locationManager.distanceFilter = 25
         locationManager.activityType = .automotiveNavigation
         // Pausing drops the first half of a drive: iOS stays asleep until well after departure.
         locationManager.pausesLocationUpdatesAutomatically = false
         locationManager.showsBackgroundLocationIndicator = true
         loadPersistedAnchor()
         restoreActiveTripIfNeeded()
+        becomeActiveObserver = NotificationCenter.default.addObserver(
+            forName: UIApplication.didBecomeActiveNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in
+                self?.resumeIfWanted()
+            }
+        }
     }
 
     func requestWhenInUse() {
@@ -69,29 +97,33 @@ final class TripDetectionService: NSObject, ObservableObject {
     }
 
     func start() {
+        wantsTracking = true
         authorizationStatus = locationManager.authorizationStatus
-        guard authorizationStatus == .authorizedAlways || authorizationStatus == .authorizedWhenInUse else {
+        // Existing When-In-Use users never saw Always because Continue fired it too early.
+        promoteAlwaysIfNeeded()
+        guard isAuthorized else {
             lastErrorMessage = "Location permission is required for auto-detect."
+            logger.info("Trip detection armed, waiting for location auth (status=\(self.authorizationStatus.rawValue, privacy: .public))")
             return
         }
-        configureBackgroundUpdatesIfAllowed()
-        applyIdleOrTripAccuracy()
-        locationManager.startUpdatingLocation()
-        locationManager.startMonitoringSignificantLocationChanges()
-        locationManager.startMonitoringVisits()
-        // Nudge a fresh fix after wake so late departures aren't waiting on the filter alone.
-        locationManager.requestLocation()
-        isTracking = true
-        logger.info("Trip detection started (auth=\(self.authorizationStatus.rawValue, privacy: .public), inflight=\(self.isInMotionTrip, privacy: .public))")
+        beginMonitoring()
     }
 
     func stop() {
+        wantsTracking = false
         locationManager.stopUpdatingLocation()
         locationManager.stopMonitoringSignificantLocationChanges()
         locationManager.stopMonitoringVisits()
+        stopMotionUpdates()
         finalizeTripIfNeeded(reason: "stop")
         isTracking = false
         logger.info("Trip detection stopped")
+    }
+
+    /// Re-arm after foreground / auth changes without clearing wantsTracking.
+    func resumeIfWanted() {
+        guard wantsTracking else { return }
+        start()
     }
 
     // MARK: - DEBUG sample injector (Simulator)
@@ -114,29 +146,90 @@ final class TripDetectionService: NSObject, ObservableObject {
     }
     #endif
 
+    private func beginMonitoring() {
+        configureBackgroundUpdatesIfAllowed()
+        applyIdleOrTripAccuracy()
+        // Do not call requestLocation() here: a one-shot can stop the continuous
+        // stream after a single cached fix, which is how auto-log never started.
+        locationManager.startUpdatingLocation()
+        locationManager.startMonitoringSignificantLocationChanges()
+        locationManager.startMonitoringVisits()
+        startMotionIfAvailable()
+        isTracking = true
+        logger.info("Trip detection started (auth=\(self.authorizationStatus.rawValue, privacy: .public), inflight=\(self.isInMotionTrip, privacy: .public))")
+    }
+
+    private func promoteAlwaysIfNeeded() {
+        if authorizationStatus == .authorizedWhenInUse {
+            locationManager.requestAlwaysAuthorization()
+        }
+    }
+
     private func configureBackgroundUpdatesIfAllowed() {
-        if authorizationStatus == .authorizedAlways {
+        // When-In-Use + the location background mode still receives updates while
+        // the app is suspended (blue bar). Always is required to relaunch after kill.
+        if isAuthorized {
             locationManager.allowsBackgroundLocationUpdates = true
         }
     }
 
     private func applyIdleAccuracy() {
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
-        locationManager.distanceFilter = 40
+        locationManager.distanceFilter = 20
     }
 
     private func applyTripAccuracy() {
         locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-        locationManager.distanceFilter = 15
+        locationManager.distanceFilter = 8
     }
 
     private func applyIdleOrTripAccuracy() {
         if isInMotionTrip { applyTripAccuracy() } else { applyIdleAccuracy() }
     }
 
+    private func startMotionIfAvailable() {
+        guard CMMotionActivityManager.isActivityAvailable(), !motionUpdatesRunning else { return }
+        motionUpdatesRunning = true
+        motionManager.startActivityUpdates(to: motionQueue) { [weak self] activity in
+            guard let activity else { return }
+            Task { @MainActor in
+                self?.handleMotion(activity)
+            }
+        }
+        logger.info("Motion activity updates started")
+    }
+
+    private func stopMotionUpdates() {
+        guard motionUpdatesRunning else { return }
+        motionManager.stopActivityUpdates()
+        motionUpdatesRunning = false
+        motionIndicatesDrive = false
+    }
+
+    private func handleMotion(_ activity: CMMotionActivity) {
+        let driving = activity.automotive && activity.confidence != .low
+        if driving {
+            motionIndicatesDrive = true
+            if !isInMotionTrip, wantsTracking, isAuthorized {
+                applyTripAccuracy()
+                locationManager.startUpdatingLocation()
+            }
+        } else if activity.stationary, activity.confidence != .low {
+            motionIndicatesDrive = false
+            if isInMotionTrip,
+               let last = lastMovementAt,
+               Date().timeIntervalSince(last) >= TripStartPolicy.dwellTimeout {
+                finalizeTripIfNeeded(reason: "motion_stationary")
+            }
+        } else if activity.walking || activity.cycling || activity.running {
+            motionIndicatesDrive = false
+        }
+    }
+
     private func handleLocation(_ location: CLLocation) {
         let accuracy = location.horizontalAccuracy
         guard TripStartPolicy.isUsableWake(accuracy: accuracy) else { return }
+        guard TripStartPolicy.isFreshSample(timestamp: location.timestamp) else { return }
 
         let point = CoordinatePoint(
             latitude: location.coordinate.latitude,
@@ -153,7 +246,8 @@ final class TripDetectionService: NSObject, ObservableObject {
             latitude: point.latitude,
             longitude: point.longitude,
             speed: speed,
-            timestamp: location.timestamp
+            timestamp: location.timestamp,
+            motionIndicatesDrive: motionIndicatesDrive
         )
 
         if !isInMotionTrip {
@@ -179,7 +273,11 @@ final class TripDetectionService: NSObject, ObservableObject {
         }
         persistActiveTrip()
 
-        if TripStartPolicy.isStationaryDwell(points: activePoints, now: location.timestamp) {
+        if TripStartPolicy.shouldFinalizeTrip(
+            points: activePoints,
+            lastMovementAt: lastMovementAt,
+            now: location.timestamp
+        ) {
             rememberStationary(point)
             finalizeTripIfNeeded(reason: "dwell")
         }
@@ -220,7 +318,7 @@ final class TripDetectionService: NSObject, ObservableObject {
         } else if let last = activePoints.last {
             let gap = TripStartPolicy.meters(from: last, to: point)
             // Keep coarse significant-change fixes so background wakes don't drop the path.
-            if gap > 60 {
+            if gap > 40 {
                 activePoints.append(point)
             }
         } else {
@@ -271,8 +369,7 @@ final class TripDetectionService: NSObject, ObservableObject {
                 recentFixes = []
                 persistActiveTrip()
                 logger.info("Trip started from visit departure")
-                // Ask for a fresh stream so the drive is followed even if the next SLC is slow.
-                locationManager.requestLocation()
+                locationManager.startUpdatingLocation()
             } else if let first = activePoints.first, when < first.timestamp {
                 activePoints.insert(point, at: 0)
                 tripStart = when
@@ -411,13 +508,21 @@ extension TripDetectionService: CLLocationManagerDelegate {
     nonisolated func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         Task { @MainActor in
             self.authorizationStatus = manager.authorizationStatus
-            if manager.authorizationStatus == .authorizedAlways {
+            switch manager.authorizationStatus {
+            case .authorizedWhenInUse:
+                // Proper two-step: Always can only be requested after When-In-Use is granted.
+                manager.requestAlwaysAuthorization()
                 manager.allowsBackgroundLocationUpdates = true
-                if self.isTracking {
-                    manager.startUpdatingLocation()
-                    manager.startMonitoringSignificantLocationChanges()
-                    manager.startMonitoringVisits()
+                if self.wantsTracking {
+                    self.beginMonitoring()
                 }
+            case .authorizedAlways:
+                manager.allowsBackgroundLocationUpdates = true
+                if self.wantsTracking {
+                    self.beginMonitoring()
+                }
+            default:
+                break
             }
             AnalyticsStub.log("location_auth", ["status": "\(manager.authorizationStatus.rawValue)"])
         }
@@ -437,7 +542,6 @@ extension TripDetectionService: CLLocationManagerDelegate {
 
     nonisolated func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         Task { @MainActor in
-            // requestLocation() occasionally fails with temporary denials; don't spam UI.
             if let cl = error as? CLError, cl.code == .locationUnknown { return }
             self.lastErrorMessage = error.localizedDescription
             self.logger.error("Location error: \(error.localizedDescription, privacy: .public)")
