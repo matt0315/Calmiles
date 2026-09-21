@@ -248,7 +248,7 @@ enum GeocodingService {
         let items = response.mapItems.filter { item in
             let coord = item.placemark.coordinate
             guard CLLocationCoordinate2DIsValid(coord) else { return false }
-            if let requireIn, !region(requireIn, contains: coord) { return false }
+            if let requireIn, !regionContains(coord, in: requireIn) { return false }
             return true
         }
         guard let item = items.first else { return nil }
